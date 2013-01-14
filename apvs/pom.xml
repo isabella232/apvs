@@ -153,6 +153,11 @@
 			<artifactId>apvs-ptu</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>ch.cern.atlas</groupId>
+			<artifactId>apvs-sliderbar</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.atmosphere</groupId>
 			<artifactId>atmosphere-gwt-client</artifactId>
 		</dependency>
@@ -225,6 +230,10 @@
 			<artifactId>asterisk-java</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.kiouri</groupId>
+			<artifactId>gwt-slider-bar</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.jvnet.hudson.main</groupId>
 			<artifactId>hudson-gwt-slf4j</artifactId>
 		</dependency>
@@ -249,14 +258,6 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<classifier>sources</classifier>
-		</dependency>
-
-		<dependency>
-			<groupId>com.kiouri</groupId>
-			<artifactId>gwt-slider-bar</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/gwt-slider-bar-1.0.jar</systemPath>
 		</dependency>
 
 	</dependencies>

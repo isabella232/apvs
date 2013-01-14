@@ -2,10 +2,9 @@
 
 <module rename-to="apvs">
 
-<!-- 
 	<inherits name='elemental.Elemental' />
 	<inherits name="com.kiouri.sliderbar.SliderBarMVP" />
--->
+
 	<inherits name='com.google.gwt.user.User' />
 	<inherits name='com.google.gwt.core.Core' />
 	<inherits name='com.google.gwt.activity.Activity' />
