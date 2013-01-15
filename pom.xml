@@ -395,7 +395,6 @@
 				<groupId>org.atmosphere</groupId>
 				<artifactId>atmosphere-gwt-client</artifactId>
 				<version>${atmosphere-ext-version}</version>
-				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.atmosphere</groupId>
