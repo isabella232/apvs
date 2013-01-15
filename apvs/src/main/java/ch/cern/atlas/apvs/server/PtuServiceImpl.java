@@ -52,6 +52,19 @@ public class PtuServiceImpl extends DbServiceImpl implements PtuService {
 
 		log.info("Starting PtuService...");
 
+		//FIXME - Change the declaring location before ServerSettingsChangedRemoteEvent
+		// Configure the client.
+		ClientBootstrap bootstrap = new ClientBootstrap(
+				new NioClientSocketChannelFactory(
+						Executors.newCachedThreadPool(),
+						Executors.newCachedThreadPool()));
+		//FIXME - Change the declaring location before ServerSettingsChangedRemoteEvent
+		ptuClientHandler = new PtuClientHandler(bootstrap, eventBus);
+		
+		
+	
+		
+		
 		ServerSettingsChangedRemoteEvent.subscribe(eventBus,
 				new ServerSettingsChangedRemoteEvent.Handler() {
 
@@ -70,25 +83,21 @@ public class PtuServiceImpl extends DbServiceImpl implements PtuService {
 										.parseInt(s[1]) : DEFAULT_PTU_PORT;
 
 								log.info("Setting PTU to " + host + ":" + port);
+								//#FIXME
 								ptuClientHandler.connect(new InetSocketAddress(
 										host, port));
 							}
 						}
 					}
 				});
-
-		// Configure the client.
-		ClientBootstrap bootstrap = new ClientBootstrap(
-				new NioClientSocketChannelFactory(
-						Executors.newCachedThreadPool(),
-						Executors.newCachedThreadPool()));
-
-		ptuClientHandler = new PtuClientHandler(bootstrap, eventBus);
-
+		
+		
+		 
 		Timer timer = new HashedWheelTimer();
 
 		// Configure the pipeline factory.
 		bootstrap.setPipelineFactory(new PtuPipelineFactory(timer, ptuClientHandler));
+		
 	}
 	
 	@Override

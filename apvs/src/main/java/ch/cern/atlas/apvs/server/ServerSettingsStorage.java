@@ -48,6 +48,7 @@ public class ServerSettingsStorage {
 				}
 			}
 		});
+
 	}
 
 	public static ServerSettingsStorage getInstance(RemoteEventBus eventBus) {

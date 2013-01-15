@@ -20,7 +20,7 @@ public class AudioSettings implements Serializable {
 		String  destPTU;
 		String  channel;
 		String  activity;
-		String  status;
+		Boolean  status;
 		
 		// Private Call
 		Boolean onCall;
@@ -36,7 +36,7 @@ public class AudioSettings implements Serializable {
 			channel = "";
 			destUser = "";
 			destPTU = "";
-			status = "";
+			status = false;
 			activity = "";
 			
 			onCall = false;
@@ -122,12 +122,12 @@ public class AudioSettings implements Serializable {
 
 	
 	// Status Methods
-	public String getStatus(String ptuId) {
+	public Boolean getStatus(String ptuId) {
 		Entry entry = entries.get(ptuId);
-		return (entry != null ? entry.status : "");
+		return (entry != null ? entry.status : false);
 	}
 
-	public void setStatus(String ptuId, String status) {
+	public void setStatus(String ptuId, Boolean status) {
 		entries.get(ptuId).status = status;
 	}
 

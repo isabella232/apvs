@@ -26,11 +26,11 @@ import com.google.gwt.view.client.ListDataProvider;
 
 public class AudioSettingsView extends VerticalPanel implements Module{
 	
-	private CellTable<String> table = new CellTable<String>(); 
-	private AudioSettings voipAccounts =  new AudioSettings();
-	private List<String> activePtuIds = new ArrayList<String>();
-	private List<String> usersList = new ArrayList<String>();
-	private ListDataProvider<String> dataProvider = new ListDataProvider<String>();
+	private CellTable<String> table = new CellTable<String>(); //n a partida
+	private AudioSettings voipAccounts =  new AudioSettings();	//s a partida
+	private List<String> activePtuIds = new ArrayList<String>(); //n a partida
+	private List<String> usersList = new ArrayList<String>();	//s a partida
+	private ListDataProvider<String> dataProvider = new ListDataProvider<String>(); //n a partida
 
 	
 	public AudioSettingsView() {

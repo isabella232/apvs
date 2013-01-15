@@ -60,6 +60,7 @@ public class DbCallback {
 			public void run() {
 				try {
 					datasource = new ComboPooledDataSource();
+				
 					datasource
 							.setDriverClass(LOG_DB ? "net.sf.log4jdbc.DriverSpy"
 									: "oracle.jdbc.OracleDriver");
