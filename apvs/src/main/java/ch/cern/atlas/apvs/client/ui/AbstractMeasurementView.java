@@ -6,6 +6,7 @@ import java.util.List;
 import ch.cern.atlas.apvs.client.ClientFactory;
 import ch.cern.atlas.apvs.client.domain.HistoryMap;
 import ch.cern.atlas.apvs.client.domain.InterventionMap;
+import ch.cern.atlas.apvs.client.domain.Ternary;
 import ch.cern.atlas.apvs.client.event.ConnectionStatusChangedRemoteEvent;
 import ch.cern.atlas.apvs.client.event.HistoryMapChangedEvent;
 import ch.cern.atlas.apvs.client.event.InterventionMapChangedRemoteEvent;
@@ -54,8 +55,8 @@ public abstract class AbstractMeasurementView extends GlassPanel implements Modu
 
 	private UpdateScheduler scheduler = new UpdateScheduler(this);
 
-	private boolean daqOk;
-	private boolean databaseOk;
+	private Ternary daqOk;
+	private Ternary databaseOk;
 
 	public AbstractMeasurementView() {
 	}
@@ -87,16 +88,16 @@ public abstract class AbstractMeasurementView extends GlassPanel implements Modu
 							ConnectionStatusChangedRemoteEvent event) {
 						switch (event.getConnection()) {
 						case daq:
-							daqOk = event.isOk();
+							daqOk = event.getStatus();
 							break;
 						case database:
-							databaseOk = event.isOk();
+							databaseOk = event.getStatus();
 							break;
 						default:
 							break;
 						}
 
-						showGlass(!daqOk || !databaseOk);
+						showGlass(daqOk.not().or(databaseOk.not()).isTrue());
 					}
 				});
 

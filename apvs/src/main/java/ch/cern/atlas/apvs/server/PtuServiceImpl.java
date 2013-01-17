@@ -44,6 +44,8 @@ public class PtuServiceImpl extends DbServiceImpl implements PtuService {
 	public PtuServiceImpl() {
 		log.info("Creating PtuService...");
 		eventBus = APVSServerFactory.getInstance().getEventBus();
+
+		PtuSettingsStorage.getInstance(eventBus);
 	}
 
 	@Override
@@ -61,9 +63,9 @@ public class PtuServiceImpl extends DbServiceImpl implements PtuService {
 		//FIXME - Change the declaring location before ServerSettingsChangedRemoteEvent
 		ptuClientHandler = new PtuClientHandler(bootstrap, eventBus);
 		
-		
-	
-		
+		// Configure the pipeline factory.
+		Timer timer = new HashedWheelTimer();
+		bootstrap.setPipelineFactory(new PtuPipelineFactory(timer, ptuClientHandler));
 		
 		ServerSettingsChangedRemoteEvent.subscribe(eventBus,
 				new ServerSettingsChangedRemoteEvent.Handler() {
@@ -93,10 +95,6 @@ public class PtuServiceImpl extends DbServiceImpl implements PtuService {
 		
 		
 		 
-		Timer timer = new HashedWheelTimer();
-
-		// Configure the pipeline factory.
-		bootstrap.setPipelineFactory(new PtuPipelineFactory(timer, ptuClientHandler));
 		
 	}
 	

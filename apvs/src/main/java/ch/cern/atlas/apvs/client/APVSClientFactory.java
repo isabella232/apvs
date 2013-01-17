@@ -30,6 +30,7 @@ import ch.cern.atlas.apvs.client.ui.PtuSelector;
 import ch.cern.atlas.apvs.eventbus.client.AtmosphereEventBus;
 import ch.cern.atlas.apvs.eventbus.client.PollEventBus;
 import ch.cern.atlas.apvs.eventbus.shared.RemoteEventBus;
+import ch.cern.atlas.apvs.server.ServerSettingsStorage;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceController;
@@ -78,7 +79,7 @@ public class APVSClientFactory implements ClientFactory {
 		placeController = new PlaceController(remoteEventBus);
 		
 		// specially for now in iPad app
-		localEventBus = new RemoteEventBus();		
+		localEventBus = new RemoteEventBus();
 	}
 
 	@Override

@@ -3,9 +3,15 @@ package ch.cern.atlas.apvs.ptu.server;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * NO LONGER USED
+ * 
+ * TBR
+ * @author duns
+ *
+ */
 public class Limits {
 
-//	private static Random r = new Random();
 	private static Map<String, Number> high = new HashMap<String, Number>();
 	private static Map<String, Number> low = new HashMap<String, Number>();
 	
@@ -33,13 +39,11 @@ public class Limits {
 	}
 	
 	public static Number getHigh(String name) {
-//		double diff = high.get(name).doubleValue() - low.get(name).doubleValue();
-		return high.get(name); // + r.nextGaussian()*0.01*diff;
+		return high.get(name);
 	}
 
 	public static Number getLow(String name) {
-//		double diff = high.get(name).doubleValue() - low.get(name).doubleValue();
-		return low.get(name); // + r.nextGaussian()*0.01*diff;
+		return low.get(name);
 	}
 
 }

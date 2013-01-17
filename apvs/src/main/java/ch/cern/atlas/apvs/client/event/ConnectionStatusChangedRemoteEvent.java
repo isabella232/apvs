@@ -1,5 +1,6 @@
 package ch.cern.atlas.apvs.client.event;
 
+import ch.cern.atlas.apvs.client.domain.Ternary;
 import ch.cern.atlas.apvs.eventbus.shared.RemoteEvent;
 import ch.cern.atlas.apvs.eventbus.shared.RemoteEventBus;
 import ch.cern.atlas.apvs.eventbus.shared.RequestRemoteEvent;
@@ -40,8 +41,13 @@ public class ConnectionStatusChangedRemoteEvent extends
 	private static final Type<ConnectionStatusChangedRemoteEvent.Handler> TYPE = new Type<ConnectionStatusChangedRemoteEvent.Handler>();
 
 	public static void fire(RemoteEventBus eventBus, ConnectionType type,
+			Ternary status) {
+		eventBus.fireEvent(new ConnectionStatusChangedRemoteEvent(type, status));
+	}
+
+	public static void fire(RemoteEventBus eventBus, ConnectionType type,
 			boolean ok) {
-		eventBus.fireEvent(new ConnectionStatusChangedRemoteEvent(type, ok));
+		eventBus.fireEvent(new ConnectionStatusChangedRemoteEvent(type, ok ? Ternary.True : Ternary.False));
 	}
 
 	/**
@@ -69,14 +75,14 @@ public class ConnectionStatusChangedRemoteEvent extends
 	}
 
 	private ConnectionType connection;
-	private boolean ok;
+	private Ternary status;
 
 	public ConnectionStatusChangedRemoteEvent() {
 	}
 
-	public ConnectionStatusChangedRemoteEvent(ConnectionType connection, boolean ok) {
+	public ConnectionStatusChangedRemoteEvent(ConnectionType connection, Ternary status) {
 		this.connection = connection;
-		this.ok = ok;
+		this.status = status;
 	}
 
 	@Override
@@ -88,8 +94,8 @@ public class ConnectionStatusChangedRemoteEvent extends
 		return connection;
 	}
 
-	public boolean isOk() {
-		return ok;
+	public Ternary getStatus() {
+		return status;
 	}
 
 	@Override

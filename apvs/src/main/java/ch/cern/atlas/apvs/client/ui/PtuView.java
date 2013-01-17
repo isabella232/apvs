@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import ch.cern.atlas.apvs.client.ClientFactory;
 import ch.cern.atlas.apvs.client.domain.HistoryMap;
 import ch.cern.atlas.apvs.client.domain.InterventionMap;
+import ch.cern.atlas.apvs.client.domain.Ternary;
 import ch.cern.atlas.apvs.client.event.ConnectionStatusChangedRemoteEvent;
 import ch.cern.atlas.apvs.client.event.HistoryMapChangedEvent;
 import ch.cern.atlas.apvs.client.event.InterventionMapChangedRemoteEvent;
@@ -67,8 +68,8 @@ public class PtuView extends GlassPanel implements Module {
 
 	private UpdateScheduler scheduler = new UpdateScheduler(this);
 
-	private boolean daqOk;
-	private boolean databaseOk;
+	private Ternary daqOk;
+	private Ternary databaseOk;
 
 	private HistoryMap historyMap;
 
@@ -152,16 +153,16 @@ public class PtuView extends GlassPanel implements Module {
 							ConnectionStatusChangedRemoteEvent event) {
 						switch (event.getConnection()) {
 						case daq:
-							daqOk = event.isOk();
+							daqOk = event.getStatus();
 							break;
 						case database:
-							databaseOk = event.isOk();
+							databaseOk = event.getStatus();
 							break;
 						default:
 							break;
 						}
 
-						showGlass(!daqOk || !databaseOk);
+						showGlass(daqOk.not().or(databaseOk.not()).isTrue());
 					}
 				});
 
