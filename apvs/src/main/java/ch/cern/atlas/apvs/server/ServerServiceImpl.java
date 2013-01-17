@@ -33,7 +33,7 @@ public class ServerServiceImpl extends ResponsePollService implements
 
 		log.info("Starting ServerService...");
 
-		PtuSettingsStorage.getInstance(eventBus);
+		// FIXME, move this back to AudioSettings as ServerSettingsStorage is now created in ServerFactory
 		AudioSettingsStorage.getInstance(eventBus);
 	}
 

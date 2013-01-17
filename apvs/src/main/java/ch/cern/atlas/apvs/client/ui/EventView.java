@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.cern.atlas.apvs.client.ClientFactory;
+import ch.cern.atlas.apvs.client.domain.Ternary;
 import ch.cern.atlas.apvs.client.event.ConnectionStatusChangedRemoteEvent;
 import ch.cern.atlas.apvs.client.event.SelectPtuEvent;
 import ch.cern.atlas.apvs.client.event.SelectTabEvent;
@@ -70,9 +71,8 @@ public class EventView extends GlassPanel implements Module {
 
 	private UpdateScheduler scheduler = new UpdateScheduler(this);
 
-	protected boolean daqOk;
-
-	protected boolean databaseOk;
+	protected Ternary daqOk;
+	protected Ternary databaseOk;
 
 	public EventView() {
 	}
@@ -209,16 +209,16 @@ public class EventView extends GlassPanel implements Module {
 							ConnectionStatusChangedRemoteEvent event) {
 						switch (event.getConnection()) {
 						case daq:
-							daqOk = event.isOk();
+							daqOk = event.getStatus();
 							break;
 						case database:
-							databaseOk = event.isOk();
+							databaseOk = event.getStatus();
 							break;
 						default:
 							break;
 						}
 
-						showGlass(!daqOk || !databaseOk);
+						showGlass(daqOk.not().or(databaseOk.not()).isTrue());
 					}
 				});
 

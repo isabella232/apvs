@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.cern.atlas.apvs.client.ClientFactory;
+import ch.cern.atlas.apvs.client.domain.Ternary;
 import ch.cern.atlas.apvs.client.event.AudioSettingsChangedRemoteEvent;
 import ch.cern.atlas.apvs.client.event.ConnectionStatusChangedRemoteEvent;
 import ch.cern.atlas.apvs.client.event.InterventionMapChangedRemoteEvent;
@@ -27,8 +28,8 @@ public class AudioSummary extends GlassPanel implements Module {
 	private ListDataProvider<String> dataProvider = new ListDataProvider<String>();
 
 	private AudioSettings voipAccounts = new AudioSettings();
-	protected boolean audioOk;
-	protected boolean databaseOk;
+	protected Ternary audioOk;
+	protected Ternary databaseOk;
 
 	public AudioSummary() {
 	}
@@ -158,16 +159,16 @@ public class AudioSummary extends GlassPanel implements Module {
 							ConnectionStatusChangedRemoteEvent event) {
 						switch (event.getConnection()) {
 						case audio:
-							audioOk = event.isOk();
+							audioOk = event.getStatus();
 							break;
 						case database:
-							databaseOk = event.isOk();
+							databaseOk = event.getStatus();
 							break;
 						default:
 							break;
 						}
 
-						showGlass(!audioOk || !databaseOk);
+						showGlass(audioOk.not().or(databaseOk.not()).isTrue());
 					}
 				});
 

@@ -17,6 +17,7 @@ import org.jboss.netty.channel.MessageEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.cern.atlas.apvs.client.domain.Ternary;
 import ch.cern.atlas.apvs.client.event.ConnectionStatusChangedRemoteEvent;
 import ch.cern.atlas.apvs.client.event.ConnectionStatusChangedRemoteEvent.ConnectionType;
 import ch.cern.atlas.apvs.domain.APVSException;
@@ -42,7 +43,7 @@ public class PtuClientHandler extends PtuReconnectHandler {
 
 	private List<Measurement> measurementChanged = new ArrayList<Measurement>();
 
-	private boolean dosimeterOk;
+	private Ternary dosimeterOk = Ternary.Unknown;
 
 	public PtuClientHandler(ClientBootstrap bootstrap,
 			final RemoteEventBus eventBus) {
@@ -60,8 +61,7 @@ public class PtuClientHandler extends PtuReconnectHandler {
 					ConnectionStatusChangedRemoteEvent.fire(eventBus,
 							ConnectionType.daq, isConnected());
 					ConnectionStatusChangedRemoteEvent.fire(eventBus,
-							ConnectionType.dosimeter, isConnected()
-									&& dosimeterOk);
+							ConnectionType.dosimeter, isConnected() ? dosimeterOk : Ternary.False);
 				}
 			}
 		});
@@ -110,14 +110,15 @@ public class PtuClientHandler extends PtuReconnectHandler {
 		}
 	}
 
-	private final static boolean DEBUG = false;
+	private final static boolean DEBUG = true;
+	private final static boolean DEBUGPLUS = false;
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) {
 		// Print out the line received from the server.
 		String line = (String) event.getMessage();
 
-		if (DEBUG) {
+		if (DEBUGPLUS) {
 			for (int i = 0; i < line.length(); i++) {
 				char c = line.charAt(i);
 				System.err.println(c + " " + Integer.toString(c));
@@ -129,7 +130,9 @@ public class PtuClientHandler extends PtuReconnectHandler {
 		line = line.replaceAll("\u0013", "");
 		if (DEBUG) {
 			log.info("'" + line + "'");
-			log.info("LineLength" + line.length());
+		}
+		if (DEBUGPLUS) {
+			log.info("LineLength " + line.length());
 		}
 
 		List<Message> list;
@@ -202,11 +205,11 @@ public class PtuClientHandler extends PtuReconnectHandler {
 						.getTheshold(), message.getUnit(), message.getDate())));
 
 		if (message.getEventType().equals("DosConnectionStatus_OFF")) {
-			dosimeterOk = false;
+			dosimeterOk = Ternary.False;
 			ConnectionStatusChangedRemoteEvent.fire(eventBus,
 					ConnectionType.dosimeter, dosimeterOk);
 		} else if (message.getEventType().equals("DosConnectionStatus_ON")) {
-			dosimeterOk = true;
+			dosimeterOk = Ternary.True;
 			ConnectionStatusChangedRemoteEvent.fire(eventBus,
 					ConnectionType.dosimeter, dosimeterOk);
 		}

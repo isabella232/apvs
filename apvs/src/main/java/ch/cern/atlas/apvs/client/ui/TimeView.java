@@ -74,7 +74,7 @@ public class TimeView extends AbstractTimeView implements Module {
 							ConnectionStatusChangedRemoteEvent event) {
 						switch (event.getConnection()) {
 						case database:
-							showGlass(!event.isOk());
+							showGlass(!event.getStatus().isTrue());
 							break;
 						default:
 							break;

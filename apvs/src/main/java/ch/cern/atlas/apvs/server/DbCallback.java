@@ -68,7 +68,6 @@ public class DbCallback {
 					String pwd = ServerSettingsStorage.getInstance(eventBus)
 							.getPasswords()
 							.get(ServerSettings.Entry.databaseUrl.toString());
-
 					if (pos >= 0 && pwd != null && !pwd.equals("")) {
 						String shortUrl = url.substring(pos);
 						String user = url.substring(0, pos);
@@ -128,7 +127,7 @@ public class DbCallback {
 	}
 
 	protected Connection getConnection() throws SQLException {
-		if (datasource == null) {
+		if (datasource == null || datasource.getPassword() == null) {
 			throw new SQLException("No Datasource (yet)");
 		}
 		return datasource.getConnection();

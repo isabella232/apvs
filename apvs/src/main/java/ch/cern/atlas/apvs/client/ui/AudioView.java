@@ -237,7 +237,7 @@ public class AudioView extends GlassPanel implements Module {
 					public void onConnectionStatusChanged(
 							ConnectionStatusChangedRemoteEvent event) {
 						if (event.getConnection() == ConnectionType.audio) {
-							showGlass(!event.isOk());
+							showGlass(!event.getStatus().isTrue());
 						}
 					}
 				});

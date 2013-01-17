@@ -50,15 +50,12 @@ public class PtuJsonReader extends JsonReader {
 			JsonObject msg = msgs.get(i);
 			String type = (String) msg.get("Type");
 			if (type.equals("Measurement")) {
-				// FIXME #4
 				String sensor = (String) msg.get("Sensor");
 				String unit = (String) msg.get("Unit");
 				Number value = Double.parseDouble((String) msg.get("Value"));
 
-				Number low = Double.parseDouble((String) msg
-						.get("DownThreshold"));
-				Number high = Double.parseDouble((String) msg
-						.get("UpThreshold"));
+				Number low = convertToDouble(msg.get("DownThreshold"));
+				Number high = convertToDouble(msg.get("UpThreshold"));
 
 				// Scale down to microSievert
 				value = Scale.getValue(value, unit);

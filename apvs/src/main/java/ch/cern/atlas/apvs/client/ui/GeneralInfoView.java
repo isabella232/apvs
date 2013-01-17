@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import ch.cern.atlas.apvs.client.ClientFactory;
 import ch.cern.atlas.apvs.client.domain.Intervention;
 import ch.cern.atlas.apvs.client.domain.InterventionMap;
+import ch.cern.atlas.apvs.client.domain.Ternary;
 import ch.cern.atlas.apvs.client.event.ConnectionStatusChangedRemoteEvent;
 import ch.cern.atlas.apvs.client.event.ConnectionStatusChangedRemoteEvent.ConnectionType;
 import ch.cern.atlas.apvs.client.event.InterventionMapChangedRemoteEvent;
@@ -24,6 +25,7 @@ import ch.cern.atlas.apvs.ptu.shared.PtuClientConstants;
 import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.DateCell;
+import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -43,7 +45,7 @@ public class GeneralInfoView extends VerticalFlowPanel implements Module {
 	private EventBus cmdBus;
 
 	private String ptuId;
-	private boolean audioOk, videoOk, daqOk, dosimeterOk, databaseOk;
+	private Ternary audioOk, videoOk, daqOk, dosimeterOk, databaseOk;
 	private InterventionMap interventions;
 
 	private boolean showHeader = true;
@@ -56,8 +58,8 @@ public class GeneralInfoView extends VerticalFlowPanel implements Module {
 			ConnectionType.dosimeter.getString(),
 			ConnectionType.database.getString(), "Start Time", "Duration" });
 	private List<Class<?>> classes = Arrays.asList(new Class<?>[] {
-			CheckboxCell.class, CheckboxCell.class, CheckboxCell.class,
-			CheckboxCell.class, CheckboxCell.class, DateCell.class,
+			TextCell.class, TextCell.class, TextCell.class,
+			TextCell.class, TextCell.class, DateCell.class,
 			DurationCell.class });
 
 	private UpdateScheduler scheduler = new UpdateScheduler(this);
@@ -117,6 +119,10 @@ public class GeneralInfoView extends VerticalFlowPanel implements Module {
 			@Override
 			public void render(Context context, String name, SafeHtmlBuilder sb) {
 				Object s = getValue(name);
+				if (s instanceof Ternary) {
+					Ternary t = (Ternary)s;
+					s =  t.isTrue() ? "Ok" : t.isFalse() ? "Fail" : "Unknown";
+				}
 				getCell().render(context, s, sb);
 			}
 		};
@@ -135,20 +141,20 @@ public class GeneralInfoView extends VerticalFlowPanel implements Module {
 							ConnectionStatusChangedRemoteEvent event) {
 						switch (event.getConnection()) {
 						case audio:
-							audioOk = event.isOk();
+							audioOk = event.getStatus();
 							break;
 						case video:
 							// FIXME #192, not sent yet
-							videoOk = event.isOk();
+							videoOk = event.getStatus();
 							break;
 						case daq:
-							daqOk = event.isOk();
+							daqOk = event.getStatus();
 							break;
 						case dosimeter:
-							dosimeterOk = event.isOk();
+							dosimeterOk = event.getStatus();
 							break;
 						case database:
-							databaseOk = event.isOk();
+							databaseOk = event.getStatus();
 							break;
 						default:
 							return;
