@@ -173,10 +173,8 @@ public class InterventionView extends GlassPanel implements Module {
 				SortOrder[] order = new SortOrder[sortList.size()];
 				for (int i = 0; i < sortList.size(); i++) {
 					ColumnSortInfo info = sortList.get(i);
-					order[i] = new SortOrder(
-							info.getColumn()
-									.getDataStoreName(),
-							info.isAscending());
+					order[i] = new SortOrder(info.getColumn()
+							.getDataStoreName(), info.isAscending());
 				}
 
 				if (order.length == 0) {
@@ -231,7 +229,8 @@ public class InterventionView extends GlassPanel implements Module {
 				}
 			});
 		}
-		table.addColumn(startTime, new TextHeader("Start Time"), pager.getHeader());
+		table.addColumn(startTime, new TextHeader("Start Time"),
+				pager.getHeader());
 		table.getColumnSortList().push(new ColumnSortInfo(startTime, false));
 
 		// endTime
@@ -282,7 +281,7 @@ public class InterventionView extends GlassPanel implements Module {
 			}
 		});
 		table.addColumn(endTime, new TextHeader("End Time"), pager.getHeader());
-		
+
 		Header<String> interventionFooter = new Header<String>(new ButtonCell()) {
 			@Override
 			public String getValue() {
@@ -341,9 +340,8 @@ public class InterventionView extends GlassPanel implements Module {
 								log.warn("Caught : " + caught);
 							}
 						});
-				
-				final TextBoxField impact = new TextBoxField(
-						"Impact Number");
+
+				final TextBoxField impact = new TextBoxField("Impact Number");
 				fieldset.add(impact);
 
 				final TextAreaField description = new TextAreaField(
@@ -369,8 +367,8 @@ public class InterventionView extends GlassPanel implements Module {
 						m.hide();
 
 						Intervention intervention = new Intervention(userField
-								.getId(), ptu.getId(), new Date(), impact.getValue(), description
-								.getValue());
+								.getId(), ptu.getId(), new Date(), impact
+								.getValue(), 0.0, description.getValue());
 
 						interventionService.addIntervention(intervention,
 								new AsyncCallback<Void>() {
@@ -566,6 +564,12 @@ public class InterventionView extends GlassPanel implements Module {
 				final TextBoxField ip = new TextBoxField("IP");
 				fieldset.add(ip);
 
+				final TextBoxField macAddress = new TextBoxField("MAC Address");
+				fieldset.add(macAddress);
+
+				final TextBoxField hostName = new TextBoxField("Host Name");
+				fieldset.add(hostName);
+
 				final TextAreaField description = new TextAreaField(
 						"Description");
 				fieldset.add(description);
@@ -589,7 +593,8 @@ public class InterventionView extends GlassPanel implements Module {
 						m.hide();
 
 						Device device = new Device(0, ptuId.getValue(), ip
-								.getValue(), description.getValue());
+								.getValue(), description.getValue(), macAddress
+								.getValue(), hostName.getValue());
 
 						interventionService.addDevice(device,
 								new AsyncCallback<Void>() {
@@ -630,8 +635,7 @@ public class InterventionView extends GlassPanel implements Module {
 
 			@Override
 			public String getDataStoreName() {
-				// FIXME #250 check
-				return "tbl_inspections.impact";
+				return "tbl_inspections.impact_num";
 			}
 		};
 		impact.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
@@ -654,10 +658,26 @@ public class InterventionView extends GlassPanel implements Module {
 						});
 			}
 		});
-		table.addColumn(impact, new TextHeader("Impact #"),
+		table.addColumn(impact, new TextHeader("Impact #"), new TextHeader(""));
+
+		// Rec Status
+		EditTextColumn<Intervention> recStatus = new EditTextColumn<Intervention>() {
+			@Override
+			public String getValue(Intervention object) {
+				return object.getRecStatus() != null ? Double.toString(object
+						.getRecStatus()) : "";
+			}
+
+			@Override
+			public String getDataStoreName() {
+				return "tbl_inspections.rec_status";
+			}
+		};
+		impact.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		impact.setSortable(true);
+		table.addColumn(recStatus, new TextHeader("Rec Status"),
 				new TextHeader(""));
 
-		
 		// Description
 		EditTextColumn<Intervention> description = new EditTextColumn<Intervention>() {
 			@Override

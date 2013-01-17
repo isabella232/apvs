@@ -9,10 +9,15 @@ import org.slf4j.LoggerFactory;
 
 import ch.cern.atlas.apvs.client.ClientFactory;
 import ch.cern.atlas.apvs.client.domain.InterventionMap;
+import ch.cern.atlas.apvs.client.event.AsteriskStatusRemoteEvent;
+import ch.cern.atlas.apvs.client.event.AudioSettingsChangedRemoteEvent;
 import ch.cern.atlas.apvs.client.event.InterventionMapChangedRemoteEvent;
 import ch.cern.atlas.apvs.client.event.PtuSettingsChangedRemoteEvent;
+import ch.cern.atlas.apvs.client.settings.AudioSettings;
 import ch.cern.atlas.apvs.client.settings.PtuSettings;
+import ch.cern.atlas.apvs.client.widget.DynamicSelectionCell;
 import ch.cern.atlas.apvs.client.widget.GlassPanel;
+import ch.cern.atlas.apvs.client.widget.StringList;
 import ch.cern.atlas.apvs.client.widget.TextInputSizeCell;
 import ch.cern.atlas.apvs.client.widget.UpdateScheduler;
 import ch.cern.atlas.apvs.domain.Order;
@@ -56,7 +61,16 @@ public class PtuSettingsView extends GlassPanel implements Module {
 	protected List<String> dosimeterSerialNumbers = new ArrayList<String>();
 
 	private UpdateScheduler scheduler = new UpdateScheduler(this);
-
+	
+	/*
+	 * Addition Variables declaration
+	 */
+	private List<String> usersList = new ArrayList<String>();
+	private AudioSettings voipAccounts =  new AudioSettings();
+	/*
+	 * End of addition
+	 */
+	
 	public PtuSettingsView() {
 	}
 
@@ -66,6 +80,26 @@ public class PtuSettingsView extends GlassPanel implements Module {
 
 		final RemoteEventBus eventBus = clientFactory.getRemoteEventBus();
 
+		/*
+		 * Addition of Asterisk account listing event
+		 */
+		//Call RPC Method to List SIP Accounts
+		clientFactory.getAudioService().usersList(new AsyncCallback<Void>() {
+			
+			@Override
+			public void onSuccess(Void result) {
+				System.err.println("Asterisk SIP users listed...");
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				System.err.println("Fail to list Asterisk SIP users " + caught);				
+			}
+		});
+		/*
+		 * End of addition
+		 */
+		
 		add(table, CENTER);
 
 		// ENABLED
@@ -276,7 +310,60 @@ public class PtuSettingsView extends GlassPanel implements Module {
 
 		dataProvider.addDataDisplay(table);
 		dataProvider.setList(new ArrayList<String>());
-
+		
+		/*
+		 * Addition on SIP Account
+		 */
+		//SIP Number 
+		Column<String, String> number = new Column<String, String>(new DynamicSelectionCell(new StringList<String>(usersList))){
+			
+			@Override
+			public String getValue(String object) {
+				return voipAccounts.getNumber(object);
+			}
+					
+		};
+		number.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		table.addColumn(number, "SIP Account");
+				
+		number.setFieldUpdater(new FieldUpdater<String, String>() {
+			
+			@Override
+			public void update(int index, String object, String value) {
+				voipAccounts.setNumber(object, value);
+				eventBus.fireEvent(new AudioSettingsChangedRemoteEvent(voipAccounts));
+			}
+		});
+		/*
+		 * End of addition
+		 */
+		
+		/*
+		 * Addition on Activity
+		 */
+		//Impact Activity Name
+		Column<String, String> activity = new Column<String, String>(new TextInputSizeCell(30)) {
+			
+			@Override
+			public String getValue(String object) {
+				return voipAccounts.getActivity(object);
+			}
+		};
+		activity.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		table.addColumn(activity, "Impact Activity Name");
+		
+		activity.setFieldUpdater(new FieldUpdater<String, String>() {
+			
+			@Override
+			public void update(int index, String object, String value) {
+				voipAccounts.setActivity(object, value);
+				eventBus.fireEvent(new AudioSettingsChangedRemoteEvent(voipAccounts));
+			}
+		});
+		/*
+		 * End of addition
+		 */
+		
 		// SORTING
 		columnSortHandler = new ListHandler<String>(dataProvider.getList());
 		columnSortHandler.setComparator(ptuId, new Comparator<String>() {
@@ -340,6 +427,42 @@ public class PtuSettingsView extends GlassPanel implements Module {
 						scheduler.update();
 					}
 				});
+		
+		/*
+		 * Addition of Audio settings change
+		 */
+		AudioSettingsChangedRemoteEvent.subscribe(eventBus,new AudioSettingsChangedRemoteEvent.Handler() {
+			
+			@Override
+			public void onAudioSettingsChanged(AudioSettingsChangedRemoteEvent event) {
+				System.out.println("Audio Settings changed");
+				voipAccounts = event.getAudioSettings();
+
+				dataProvider.getList().clear();
+				dataProvider.getList().addAll(voipAccounts.getPtuIds());
+			}
+		}); 		
+		
+		/*
+		 * End of addition
+		 */
+		
+		/*
+		 * Addition of Asterisk account listing event
+		 */
+		AsteriskStatusRemoteEvent.register(eventBus, new AsteriskStatusRemoteEvent.Handler() {
+			
+			@Override
+			public void onAsteriskStatusChange(AsteriskStatusRemoteEvent event) {
+				System.out.println("Asterisk Event");
+				usersList.clear();
+				usersList.addAll(event.getAsteriskUsersList());
+			}
+		});	
+		/*
+		 * End of addition
+		 */
+		
 
 //		DosimeterSerialNumbersChangedEvent.subscribe(eventBus,
 //				new DosimeterSerialNumbersChangedEvent.Handler() {

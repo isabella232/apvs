@@ -21,6 +21,7 @@ import org.asteriskjava.live.OriginateCallback;
 import org.asteriskjava.manager.AuthenticationFailedException;
 import org.asteriskjava.manager.ManagerConnection;
 import org.asteriskjava.manager.ManagerConnectionFactory;
+import org.asteriskjava.manager.ManagerConnectionState;
 import org.asteriskjava.manager.ManagerEventListener;
 import org.asteriskjava.manager.TimeoutException;
 import org.asteriskjava.manager.action.HangupAction;
@@ -74,18 +75,13 @@ public class AudioServiceImpl extends ResponsePollService implements
 	
 	private boolean audioOk;
 	private boolean asteriskConnected;
-	private AsteriskPing ping;
-
-	// Account Details
-	private static final String ASTERISK_URL = "pcatlaswpss01.cern.ch";
-	private static final String AMI_ACCOUNT = "manager";
-	private static final String PASSWORD = "password";
+	private ServerSettings auxSettings;
 
 	// Asterisk Placing Calls Details
 	private static final String CONTEXT = "internal";
 	private static final int PRIORITY = 1;
 	private static final int TIMEOUT = 20000;
-	private static final long ASTERISK_POOLING = 20000;
+	private static final long ASTERISK_POLLING = 5000;
 	
 	private String asteriskUrl;
 	private String asteriskPwd;	
@@ -93,31 +89,40 @@ public class AudioServiceImpl extends ResponsePollService implements
 	private static RemoteEventBus eventBus;
 	int i;
 	
-	public class ConnectionThread extends Thread {
-
-	    public void run() {
-
-			if (!asteriskConnected) {
-				System.out.println("Trying login in Asterisk Server on " + ASTERISK_URL.toLowerCase() + " ...");
-				try {
-					login();
-				} catch (AudioException e) {
-					System.err.println("Fail to login: " + e.getMessage());
-				}
-			}
-			
-			if (AudioServiceImpl.this.ping.isAlive()) {
+	public class AsteriskPingThread extends Thread {
+	    public void run() {		
+			if(new AsteriskPing(managerConnection).isAlive()) {
 				audioOk = true;
 				ConnectionStatusChangedRemoteEvent.fire(eventBus,ConnectionType.audio, audioOk);
 			} else {
+				asteriskConnected=false;
 				audioOk = false;
-				System.err.println("Asterisk Server is not available...");
+				asteriskUrl = new String();
+				System.err.println("Asterisk Server: " + asteriskUrl + " is not available...");
 				ConnectionStatusChangedRemoteEvent.fire(eventBus,ConnectionType.audio, audioOk);
+				((RemoteEventBus) eventBus).fireEvent(new ServerSettingsChangedRemoteEvent(auxSettings));
 			}
 	    }
 	}
-	
-	private ConnectionThread asteriskConnection;
+
+	public class AsteriskConnect extends Thread {
+	    public void run() {
+	    	while (!asteriskConnected) {
+	    		System.out.println("Trying login in Asterisk Server on " + asteriskUrl + " ...");
+				try {
+					login();
+					future = executorService.scheduleAtFixedRate(new AsteriskPingThread(), 0, ASTERISK_POLLING, TimeUnit.MILLISECONDS);
+				} catch (AudioException e) {
+					System.err.println("Fail to login: " + e.getMessage());
+				}
+				try {
+					Thread.sleep(ASTERISK_POLLING);
+				} catch (InterruptedException e) {
+					System.err.println("Thread sleep error" + e.getMessage());
+				}
+			}
+	    }
+	}
 	
 	/*********************************************
 	* Constructor
@@ -154,7 +159,6 @@ public class AudioServiceImpl extends ResponsePollService implements
 		voipAccounts = new AudioSettings();
 		conferenceRooms = new ConferenceRooms();
 		audioOk = false;
-		asteriskConnection = new ConnectionThread();
 		asteriskConnected = false;
 
 		ServerSettingsChangedRemoteEvent.subscribe(eventBus,
@@ -162,121 +166,46 @@ public class AudioServiceImpl extends ResponsePollService implements
 
 					@Override
 					public void onServerSettingsChanged(ServerSettingsChangedRemoteEvent event) {
-						
 						ServerSettings settings = event.getServerSettings();
-
+						auxSettings = settings;
 						if (settings != null) {
+							
 							String url = settings.get(ServerSettings.Entry.audioUrl.toString());
 							String pwd = ServerSettingsStorage.getInstance(eventBus).getPasswords().get(ServerSettings.Entry.audioUrl.toString());
+
 
 							if ( ((url != null) && !url.equals(asteriskUrl)) || ((pwd != null) && !pwd.equals(asteriskPwd)) ) {								
 								if(managerConnection != null){
 									managerConnection.removeEventListener(AudioServiceImpl.this);
-									future.cancel(true);
+									future.cancel(false);
 								}
 								
 								asteriskUrl = url;
-								asteriskPwd = pwd;//ServerSettingsStorage.getInstance(eventBus).getPasswords().get(ServerSettings.Entry.audioUrl.toString());;
-								asteriskConnected = false;
-								
-								
-								// Asterisk Connection Manager
-								ManagerConnectionFactory factory = new ManagerConnectionFactory(asteriskUrl, AMI_ACCOUNT, asteriskPwd);
-								AudioServiceImpl.this.managerConnection = factory.createManagerConnection();
-
-								// Eases the communication with asterisk server
-								asteriskServer = new DefaultAsteriskServer(managerConnection);
-
-								// Event handler
-								managerConnection.addEventListener(AudioServiceImpl.this);
-								
-								ping  = new AsteriskPing(managerConnection);
-								future = executorService.scheduleAtFixedRate(asteriskConnection, 0, 20000, TimeUnit.MILLISECONDS);
-								
+								int pos = asteriskUrl.indexOf("@");
+								if(pos > 0){
+									String shortUrl = url.substring(pos+1);
+									String asteriskUser = url.substring(0, pos);
+									asteriskPwd = pwd;
+									asteriskConnected = false;
+									
+									
+									// Asterisk Connection Manager
+									ManagerConnectionFactory factory = new ManagerConnectionFactory(shortUrl, asteriskUser, asteriskPwd);
+									AudioServiceImpl.this.managerConnection = factory.createManagerConnection();
+	
+									// Eases the communication with asterisk server
+									asteriskServer = new DefaultAsteriskServer(managerConnection);
+	
+									// Event handler
+									managerConnection.addEventListener(AudioServiceImpl.this);
+									
+									new AsteriskConnect().start();
+								}
 							}
 						}
 					}
 				});
-		
-		//ScheduledFuture<?>  f = executorService.scheduleAtFixedRate(asteriskConnection, 10000, 20000, TimeUnit.MILLISECONDS);
-		//f.cancel(true);
-
-		
-		/*executorService.scheduleAtFixedRate( new Runnable() {
-
-			@Override
-			public void run() {
-				
-				System.err.println("Runnable...");
-
-				if (!asteriskConnected) {
-					System.out.println("Trying login in Asterisk Server on " + ASTERISK_URL.toLowerCase() + " ...");
-					try {
-						login();
-					} catch (AudioException e) {
-						System.err.println("Fail to login: " + e.getMessage());
-					}
-				}
-										
-				if (ping.isAlive()) {
-					audioOk = true;
-					System.err.println("Ok...");
-					ConnectionStatusChangedRemoteEvent.fire(eventBus,ConnectionType.audio, audioOk);
-				} else {
-					audioOk = false;
-					System.err.println("Asterisk Server is not available...");
-					ConnectionStatusChangedRemoteEvent.fire(eventBus,ConnectionType.audio, audioOk);
-				}
-			}
-		}, 1000, ASTERISK_POOLING, TimeUnit.MILLISECONDS);*/
-		
-		
-		
-		/*
-		// Asterisk Connection Manager
-		ManagerConnectionFactory factory = new ManagerConnectionFactory(ASTERISK_URL, AMI_ACCOUNT, PASSWORD);
-		this.managerConnection = factory.createManagerConnection();
-		 
-		// Eases the communication with asterisk server
-		asteriskServer = new DefaultAsteriskServer(managerConnection);
-
-		// Event handler
-		managerConnection.addEventListener(this);
-		
-		ping  = new AsteriskPing(managerConnection);
-
-		executorService.scheduleAtFixedRate( new Runnable() {
-
-					@Override
-					public void run() {
-						if (!asteriskConnected) {
-							System.err
-									.println("Trying login in Asterisk Server on "
-											+ ASTERISK_URL.toLowerCase()
-											+ " ...");
-							try {
-								login();
-							} catch (AudioException e) {
-								System.err.println("Fail to login: "
-										+ e.getMessage());
-							}
-						}
-												
-						if (ping.isAlive()) {
-							audioOk = true;
-							ConnectionStatusChangedRemoteEvent.fire(eventBus,ConnectionType.audio, audioOk);
-						} else {
-							audioOk = false;
-							System.err.println("Asterisk Server is not available...");
-							ConnectionStatusChangedRemoteEvent.fire(eventBus,ConnectionType.audio, audioOk);
-						}
-				}
-				}, 0, ASTERISK_POOLING, TimeUnit.MILLISECONDS);
-		*/
-		
-		
-		
-		
+			
 		// FOR #281, uids may still change in the future, related to #284, at this moment any reload generated more uids... none is taken away on disconnect
 		ConnectionUUIDsChangedEvent.subscribe(eventBus, new ConnectionUUIDsChangedEvent.Handler() {
 			
@@ -454,7 +383,6 @@ public class AudioServiceImpl extends ResponsePollService implements
 	 *********************************************/
 	@Override
 	public void onManagerEvent(ManagerEvent event) {
-		System.out.println("!@#%^&*()!@#^&*()!@#^&*()!@#$%^&*(!@#%^&*(@#$%^&*("+event.toString());
 		// NewChannelEvent
 		if (event instanceof NewChannelEvent) {
 			NewChannelEvent channel = (NewChannelEvent) event;
