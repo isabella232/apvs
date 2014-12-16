@@ -10,3 +10,10 @@ dependency-reduced-pom.xml
 pom.xml.releaseBackup
 target
 /release.properties
+/APVS.properties
+/hibernate.cfg.xml
+/EgroupCheckConf.properties
+/apvs-daq-server/APVS.properties
+/apvs-daq-server/hibernate.cfg.xml
+/apvs-ojdbc/ojdbc7.jar
+
