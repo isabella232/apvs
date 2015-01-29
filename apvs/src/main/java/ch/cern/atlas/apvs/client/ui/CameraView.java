@@ -88,7 +88,7 @@ public class CameraView extends ImageView implements Module,
 		SwitchWidgetEvent.register(switchBus, new SwitchWidgetEventHandler(
 				switchBus, element, this));
 
-		init(clientFactory, "50%", "50%");
+		init(clientFactory, "100%", "100%");
 
 		return true;
 	}
@@ -169,8 +169,6 @@ public class CameraView extends ImageView implements Module,
 //			@Override
 //			public void execute() {
 				setUrl(cameraUrl);
-				setWidth("640");
-				setHeight("480");
 				
 //				Bootbox.alert("CameraURL: '"+ptuId+"' '"+cameraUrl+"'");
 //			}
