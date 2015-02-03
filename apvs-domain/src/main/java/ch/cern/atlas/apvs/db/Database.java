@@ -43,6 +43,7 @@ import ch.cern.atlas.apvs.domain.User;
 import ch.cern.atlas.apvs.hibernate.types.DoubleStringType;
 import ch.cern.atlas.apvs.hibernate.types.InetAddressType;
 import ch.cern.atlas.apvs.hibernate.types.IntegerStringType;
+import ch.cern.atlas.apvs.hibernate.types.ListDoubleStringType;
 import ch.cern.atlas.apvs.hibernate.types.MacAddressType;
 import ch.cern.atlas.apvs.util.CircularList;
 import ch.cern.atlas.apvs.util.StringUtils;
@@ -71,6 +72,7 @@ public class Database {
 
 		// mapped types
 		configuration.registerTypeOverride(new DoubleStringType());
+		configuration.registerTypeOverride(new ListDoubleStringType());
 		configuration.registerTypeOverride(new IntegerStringType());
 		configuration.registerTypeOverride(new MacAddressType());
 		configuration.registerTypeOverride(new InetAddressType());

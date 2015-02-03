@@ -2,6 +2,7 @@ package ch.cern.atlas.apvs.ptu.server;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -63,8 +64,11 @@ public class JsonMessage {
 			msg.put(TYPE, m.getType());
 			msg.put(SENSOR, m.getSensor());
 			msg.put(UNIT, m.getUnit());
-			// FIXME need to also write array
-			msg.put(VALUE, m.getValue().toString());
+			if (m.getValueList() != null) {
+				msg.put(VALUE, m.getValueList().toArray());
+			} else {
+				msg.put(VALUE, m.getValue().toString());
+			}
 			msg.put(TIME, m.getTime());
 			msg.put(SAMPLING_RATE, m.getSamplingRate());
 			msg.put(UP_THRESHOLD, m.getUpThreshold());
@@ -128,14 +132,19 @@ public class JsonMessage {
 		String type = (String) msg.get(TYPE);
 		if (type.equals("Measurement")) {
 			String sensor = getString(SENSOR);
-			String unit = getString(UNIT);
-			// FIXME need to also write array
-			Double value = getDouble(VALUE);
+			String unit = getString(UNIT);			
+			Double value = null;
+			List<Double> valueList = null;
+			if (msg.get(VALUE) instanceof JsonObject) {
+				valueList = getDoubleList(VALUE);
+			} else {
+				value = getDouble(VALUE);
+			}
 			Date time = getDate(TIME);
 			Integer samplingRate = getInteger(SAMPLING_RATE);
 
 			// fix for #486 and #490
-			if ((sensor == null) || (value == null) || (unit == null)
+			if ((sensor == null) || ((value == null) && (valueList == null)) || (unit == null)
 					|| (time == null)) {
 				log.warn("PTU "
 						+ device.getName()
@@ -145,7 +154,11 @@ public class JsonMessage {
 				return null;
 			}
 
-			// FIXME need to also write array
+			if (valueList != null) {
+				return new Measurement(device, sensor, valueList,
+						getDouble(DOWN_THRESHOLD), getDouble(UP_THRESHOLD), unit,
+						samplingRate, getString(METHOD), time);
+			} 
 			return new Measurement(device, sensor, value,
 					getDouble(DOWN_THRESHOLD), getDouble(UP_THRESHOLD), unit,
 					samplingRate, getString(METHOD), time);
@@ -188,10 +201,12 @@ public class JsonMessage {
 	}
 	
 	private List<Double> getDoubleList(String key) {
-		Object o = msg.get(key);
-		List<Double> r = new ArrayList<Double>();
-		// FIXME need to also write array
-		r.add(toDouble(o));
+		JsonObject o = (JsonObject)msg.get(key);
+		Object[] a = o.getArray();
+		List<Double> r = new ArrayList<Double>(a.length);
+		for (int i=0; i<a.length; i++) {
+			r.add((Double)a[i]);
+		}
 		return r;
 	}
 
@@ -216,6 +231,7 @@ public class JsonMessage {
 	}
 
 	public static Double toDouble(Object number) {
+		System.out.println(number.getClass());
 		if ((number == null) || !(number instanceof String)) {
 			return null;
 		}

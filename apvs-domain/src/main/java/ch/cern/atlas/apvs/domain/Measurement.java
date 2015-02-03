@@ -2,6 +2,7 @@ package ch.cern.atlas.apvs.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,6 +36,7 @@ public class Measurement implements Message, Serializable, IsSerializable,
     private volatile Long id;
 	private Date time;
 	private Double value;
+	private List<Double> valueList;
 	private String unit;
 	private String method;
 	private Integer samplingRate;
@@ -49,12 +51,11 @@ public class Measurement implements Message, Serializable, IsSerializable,
 	protected Measurement() {
 	}
 		
-	public Measurement(Device device, String sensor, Double value,
+	private Measurement(Device device, String sensor,
 			Double downThreshold, Double upThreshold, String unit,
 			Integer samplingRate, String method, Date time) {
 		setDevice(device);
 		setSensor(sensor);
-		setValue(value);
 		setDownThreshold(downThreshold);
 		setUpThreshold(upThreshold);
 		setUnit(unit);
@@ -71,6 +72,20 @@ public class Measurement implements Message, Serializable, IsSerializable,
 			this.unit = "&deg;C";
 		}
 	}	
+
+	public Measurement(Device device, String sensor, Double value,
+			Double downThreshold, Double upThreshold, String unit,
+			Integer samplingRate, String method, Date time) {
+		this(device, sensor, downThreshold, upThreshold, unit, samplingRate, method, time);
+		setValue(value);
+	}
+	
+	public Measurement(Device device, String sensor, List<Double> valueList,
+			Double downThreshold, Double upThreshold, String unit,
+			Integer samplingRate, String method, Date time) {
+		this(device, sensor, downThreshold, upThreshold, unit, samplingRate, method, time);
+		setValueList(valueList);
+	}
 	
 	public Measurement(Device device, String sensor, String displayName, Double value,
 			Double downThreshold, Double upThreshold, String unit,
@@ -106,7 +121,6 @@ public class Measurement implements Message, Serializable, IsSerializable,
 		return displayName != null ? displayName : getDisplayName(sensor);
 	}
 
-	// FIXME need to also write array
 	@Column(name = "VALUE", length=1024)
 	@Type(type="double_string")
 	public Double getValue() {
@@ -115,6 +129,16 @@ public class Measurement implements Message, Serializable, IsSerializable,
 	
 	private void setValue(Double value) {
 		this.value = value;
+	}
+
+	@Column(name = "VALUE_TXT")
+	@Type(type="list_double_string")
+	public List<Double> getValueList() {
+		return valueList;
+	}
+	
+	private void setValueList(List<Double> valueList) {
+		this.valueList = valueList;
 	}
 
 	@Column(name = "DOWN_THRES", length=20)
