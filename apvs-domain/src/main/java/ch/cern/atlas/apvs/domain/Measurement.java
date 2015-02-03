@@ -106,6 +106,7 @@ public class Measurement implements Message, Serializable, IsSerializable,
 		return displayName != null ? displayName : getDisplayName(sensor);
 	}
 
+	// FIXME need to also write array
 	@Column(name = "VALUE", length=1024)
 	@Type(type="double_string")
 	public Double getValue() {

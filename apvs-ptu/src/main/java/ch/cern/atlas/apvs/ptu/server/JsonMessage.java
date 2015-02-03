@@ -1,7 +1,9 @@
 package ch.cern.atlas.apvs.ptu.server;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +63,7 @@ public class JsonMessage {
 			msg.put(TYPE, m.getType());
 			msg.put(SENSOR, m.getSensor());
 			msg.put(UNIT, m.getUnit());
+			// FIXME need to also write array
 			msg.put(VALUE, m.getValue().toString());
 			msg.put(TIME, m.getTime());
 			msg.put(SAMPLING_RATE, m.getSamplingRate());
@@ -126,6 +129,7 @@ public class JsonMessage {
 		if (type.equals("Measurement")) {
 			String sensor = getString(SENSOR);
 			String unit = getString(UNIT);
+			// FIXME need to also write array
 			Double value = getDouble(VALUE);
 			Date time = getDate(TIME);
 			Integer samplingRate = getInteger(SAMPLING_RATE);
@@ -141,6 +145,7 @@ public class JsonMessage {
 				return null;
 			}
 
+			// FIXME need to also write array
 			return new Measurement(device, sensor, value,
 					getDouble(DOWN_THRESHOLD), getDouble(UP_THRESHOLD), unit,
 					samplingRate, getString(METHOD), time);
@@ -180,6 +185,14 @@ public class JsonMessage {
 
 	private Double getDouble(String key) {
 		return toDouble(msg.get(key));
+	}
+	
+	private List<Double> getDoubleList(String key) {
+		Object o = msg.get(key);
+		List<Double> r = new ArrayList<Double>();
+		// FIXME need to also write array
+		r.add(toDouble(o));
+		return r;
 	}
 
 	private Integer getInteger(String key) {
