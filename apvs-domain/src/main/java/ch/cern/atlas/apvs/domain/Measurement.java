@@ -36,7 +36,7 @@ public class Measurement implements Message, Serializable, IsSerializable,
     private volatile Long id;
 	private Date time;
 	private Double value;
-	private List<Double> valueList;
+	private volatile List<Double> valueList;
 	private String unit;
 	private String method;
 	private Integer samplingRate;

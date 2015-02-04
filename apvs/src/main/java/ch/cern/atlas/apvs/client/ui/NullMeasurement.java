@@ -7,6 +7,6 @@ import ch.cern.atlas.apvs.domain.Measurement;
 public class NullMeasurement extends Measurement {
 
 	public NullMeasurement(Device device, String name) {
-		super(device, name, null, null, null, null, null, null, null);
+		super(device, name, name, null, null, null, null, null, null, null);
 	}
 }
