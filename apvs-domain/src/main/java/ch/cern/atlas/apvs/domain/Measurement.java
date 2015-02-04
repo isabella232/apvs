@@ -243,6 +243,7 @@ public class Measurement implements Message, Serializable, IsSerializable,
 		return (getDevice() != null ? getDevice().hashCode() : 0)
 				+ (getSensor() != null ? getSensor().hashCode() : 0)
 				+ (getValue() != null ? getValue().hashCode() : 0)
+				+ (getValueList() != null ? getValueList().hashCode() : 0)
 				+ (getDownThreshold() != null ? getDownThreshold().hashCode() : 0)
 				+ (getUpThreshold() != null ? getUpThreshold().hashCode() : 0)
 				+ (getUnit() != null ? getUnit().hashCode() : 0)
@@ -261,6 +262,8 @@ public class Measurement implements Message, Serializable, IsSerializable,
 							.equals(m.getSensor()))
 					&& (getValue() == null ? m.getValue() == null : getValue()
 							.equals(m.getValue()))
+					&& (getValueList() == null ? m.getValueList() == null : getValueList()
+							.equals(m.getValueList()))
 					&& (getDownThreshold() == null ? m.getDownThreshold() == null
 							: getDownThreshold().equals(m.getDownThreshold()))
 					&& (getUpThreshold() == null ? m.getUpThreshold() == null
@@ -287,7 +290,7 @@ public class Measurement implements Message, Serializable, IsSerializable,
 	@Override
 	public String toString() {
 		return "Measurement [device=" + device.getName() + ", id=" + id + ", time="
-				+ time + ", value=" + value + ", unit=" + unit + ", method="
+				+ time + ", value=" + value + ", valueList=" + valueList + ", unit=" + unit + ", method="
 				+ method + ", samplingRate=" + samplingRate + ", sensor="
 				+ sensor + ", upThreshold=" + upThreshold + ", downThreshold="
 				+ downThreshold + ", connected=" + connected + ", type=" + type
