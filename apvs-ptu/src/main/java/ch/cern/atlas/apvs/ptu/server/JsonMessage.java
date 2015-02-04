@@ -142,23 +142,33 @@ public class JsonMessage {
 			}
 			Date time = getDate(TIME);
 			Integer samplingRate = getInteger(SAMPLING_RATE);
+			
+			if (unit == null) {
+				unit = "";
+			}
+
+			if (samplingRate == null) {
+				samplingRate = 5000;
+			}
 
 			// fix for #486 and #490
-			if ((sensor == null) || ((value == null) && (valueList == null)) || (unit == null)
-					|| (time == null)) {
+			if ((sensor == null) || ((value == null) && (valueList == null)) || (time == null)) {
 				log.warn("PTU "
 						+ device.getName()
-						+ ": Measurement contains <null> sensor, value, samplingrate, unit or time ("
-						+ sensor + ", " + value + ", " + unit + ", "
-						+ samplingRate + ", " + time + ")");
+						+ ": Measurement contains <null> sensor, value, or time ("
+						+ sensor + ", " + value + ", " + time + ")");
 				return null;
 			}
 
 			if (valueList != null) {
+				Measurement m = new Measurement(device, sensor, valueList,
+						getDouble(DOWN_THRESHOLD), getDouble(UP_THRESHOLD), unit,
+						samplingRate, getString(METHOD), time);
+				System.out.println(m);
 				return new Measurement(device, sensor, valueList,
 						getDouble(DOWN_THRESHOLD), getDouble(UP_THRESHOLD), unit,
 						samplingRate, getString(METHOD), time);
-			} 
+			}
 			return new Measurement(device, sensor, value,
 					getDouble(DOWN_THRESHOLD), getDouble(UP_THRESHOLD), unit,
 					samplingRate, getString(METHOD), time);
@@ -231,7 +241,6 @@ public class JsonMessage {
 	}
 
 	public static Double toDouble(Object number) {
-		System.out.println(number.getClass());
 		if ((number == null) || !(number instanceof String)) {
 			return null;
 		}
