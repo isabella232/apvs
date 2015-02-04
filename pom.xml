@@ -22,10 +22,10 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <gwt-version>2.6.1</gwt-version>
-        <gwt-plugin-version>2.6.1</gwt-plugin-version>
-        <atmosphere-version>2.1.4</atmosphere-version>
-        <atmosphere-ext-version>2.1.2</atmosphere-ext-version>
+        <gwt-version>2.7.0</gwt-version>
+        <gwt-plugin-version>2.7.0</gwt-plugin-version>
+        <atmosphere-version>2.2.2</atmosphere-version>
+        <atmosphere-ext-version>2.2.2-GWT27</atmosphere-ext-version>
         <asterisk-java-version>f8c8f014253745783149ecbe0fed3faa074a7368</asterisk-java-version>
         <commons-configuration-version>2.0-1527979</commons-configuration-version>
         <commons-io-version>2.4</commons-io-version>

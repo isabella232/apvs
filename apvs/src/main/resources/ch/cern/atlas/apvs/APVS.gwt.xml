@@ -4,7 +4,7 @@
 
 <module rename-to="apvs">
 
-<!-- 
+<!--
 	<inherits name='elemental.Elemental' />
 	<inherits name="com.kiouri.sliderbar.SliderBarMVP" />
 -->
@@ -18,7 +18,7 @@
 	<inherits name="com.google.gwt.resources.Resources" />
 	<inherits name="com.google.web.bindery.autobean.AutoBean" />
 
-<!-- 
+<!--
 	<inherits name="org.slf4j.Slf4j" />
 -->
 	<inherits name="de.benediktmeurer.gwt.slf4j.jul.JUL" />
@@ -27,7 +27,7 @@
     <inherits name="org.gwtbootstrap3.GwtBootstrap3"/>
     <inherits name="org.gwtbootstrap3.extras.bootbox.Bootbox"/>
 	<inherits name="org.gwtbootstrap3.extras.select.Select"/>
- 
+
 	<inherits name="org.hibernate.validator.HibernateValidator" />
 	<replace-with class="ch.cern.atlas.apvs.client.ui.APVSValidatorFactory">
 		<when-type-is class="javax.validation.ValidatorFactory" />
@@ -42,25 +42,21 @@
 	<!-- inherit css based theme -->
 
 	<stylesheet src='../css/ATWSS.css' />
-	
-	<script src="../webjars/highstock/${highstock-version}/js/adapters/standalone-framework.js" />
-	<script src="../webjars/highstock/${highstock-version}/js/highstock.js" />
-	<script src="../webjars/highstock/${highstock-version}/js/highcharts-more.js" />
-	<script src="../webjars/highstock/${highstock-version}/js/modules/exporting.js" />
 
 	<set-property name="locale" value="default" />
-	
+
 	<set-property name="gwt.logging.logLevel" value="INFO" />
 	<set-property name="gwt.logging.enabled" value="TRUE" />
 	<set-property name="gwt.logging.simpleRemoteHandler" value="ENABLED" />
 	<set-property name="gwt.logging.developmentModeHandler"
 		value="ENABLED" />
 	<set-property name="gwt.logging.systemHandler" value="ENABLED" />
+<!--
 	<set-property name="gwt.logging.popupHandler" value="ENABLED" />
+  <set-property name="gwt.logging.firebugHandler" value="ENABLED" />
+-->
 	<set-property name="gwt.logging.consoleHandler" value="ENABLED" />
-	<set-property name="gwt.logging.firebugHandler" value="ENABLED" />
 	<set-property name="gwt.logging.logLevel" value="FINEST" />
-	<set-property name="gwt.logging.popupHandler" value="DISABLED" />
 
 	<set-property name="compiler.stackMode" value="emulated" />
 	<set-configuration-property name="compiler.emulatedStack.recordLineNumbers"
