@@ -58,18 +58,19 @@ public class PtuJsonWriter extends JsonWriter implements ObjectWriter {
 
 	}
 
-	@Override
-	protected void writePrimitive(Object obj) throws IOException {
-		if (obj instanceof Character) {
-			writeJsonUtf8String(String.valueOf(obj), _out);
-		} else if (obj instanceof Boolean) {
-			_out.write("\""
-					+ (((Boolean) obj).booleanValue() ? "True" : "False")
-					+ "\"");
-		} else {
-			_out.write("\"" + obj.toString() + "\"");
-		}
-	}
+	// Removed to make proper json
+//	@Override
+//	protected void writePrimitive(Object obj) throws IOException {
+//		if (obj instanceof Character) {
+//			writeJsonUtf8String(String.valueOf(obj), _out);
+//		} else if (obj instanceof Boolean) {
+//			_out.write("\""
+//					+ (((Boolean) obj).booleanValue() ? "True" : "False")
+//					+ "\"");
+//		} else {
+//			_out.write("\"" + obj.toString() + "\"");
+//		}
+//	}
 
 	@Override
 	protected void writeFieldName(String name, Writer out) throws IOException {

@@ -1,10 +1,7 @@
 package ch.cern.atlas.apvs.ptu.server;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +28,7 @@ public class JsonMessage {
 	private static String SENSOR = "Sensor";
 	private static String UNIT = "Unit";
 	private static String VALUE = "Value";
+	private static String VALUE_LIST = "ValueList";
 	private static String TIME = "Time";
 	private static String SAMPLING_RATE = "SamplingRate";
 	private static String UP_THRESHOLD = "UpThreshold";
@@ -64,11 +62,8 @@ public class JsonMessage {
 			msg.put(TYPE, m.getType());
 			msg.put(SENSOR, m.getSensor());
 			msg.put(UNIT, m.getUnit());
-			if (m.getValueList() != null) {
-				msg.put(VALUE, m.getValueList().toArray());
-			} else {
-				msg.put(VALUE, m.getValue().toString());
-			}
+			msg.put(VALUE, m.getValue() != null ? m.getValue().toString() : null);
+			msg.put(VALUE_LIST, m.getValueList());
 			msg.put(TIME, m.getTime());
 			msg.put(SAMPLING_RATE, m.getSamplingRate());
 			msg.put(UP_THRESHOLD, m.getUpThreshold());
@@ -133,13 +128,8 @@ public class JsonMessage {
 		if (type.equals("Measurement")) {
 			String sensor = getString(SENSOR);
 			String unit = getString(UNIT);			
-			Double value = null;
-			List<Double> valueList = null;
-			if (msg.get(VALUE) instanceof JsonObject) {
-				valueList = getDoubleList(VALUE);
-			} else {
-				value = getDouble(VALUE);
-			}
+			Double value = getDouble(VALUE);
+			Double[] valueList = getDoubleList(VALUE_LIST);
 			Date time = getDate(TIME);
 			Integer samplingRate = getInteger(SAMPLING_RATE);
 			
@@ -155,21 +145,12 @@ public class JsonMessage {
 			if ((sensor == null) || ((value == null) && (valueList == null)) || (time == null)) {
 				log.warn("PTU "
 						+ device.getName()
-						+ ": Measurement contains <null> sensor, value, or time ("
-						+ sensor + ", " + value + ", " + time + ")");
+						+ ": Measurement contains <null> sensor, value, valueList or time ("
+						+ sensor + ", " + value + ", " + valueList + ", "+ time + ")");
 				return null;
 			}
 
-			if (valueList != null) {
-				Measurement m = new Measurement(device, sensor, valueList,
-						getDouble(DOWN_THRESHOLD), getDouble(UP_THRESHOLD), unit,
-						samplingRate, getString(METHOD), time);
-				System.out.println(m);
-				return new Measurement(device, sensor, valueList,
-						getDouble(DOWN_THRESHOLD), getDouble(UP_THRESHOLD), unit,
-						samplingRate, getString(METHOD), time);
-			}
-			return new Measurement(device, sensor, value,
+			return new Measurement(device, sensor, value, valueList,
 					getDouble(DOWN_THRESHOLD), getDouble(UP_THRESHOLD), unit,
 					samplingRate, getString(METHOD), time);
 		} else if (type.equals("Event")) {
@@ -210,12 +191,13 @@ public class JsonMessage {
 		return toDouble(msg.get(key));
 	}
 	
-	private List<Double> getDoubleList(String key) {
+	private Double[] getDoubleList(String key) {
 		JsonObject o = (JsonObject)msg.get(key);
+		if (o == null) return null;
 		Object[] a = o.getArray();
-		List<Double> r = new ArrayList<Double>(a.length);
+		Double[] r = new Double[a.length];
 		for (int i=0; i<a.length; i++) {
-			r.add((Double)a[i]);
+			r[i] = toDouble(a[i]);
 		}
 		return r;
 	}
@@ -241,6 +223,10 @@ public class JsonMessage {
 	}
 
 	public static Double toDouble(Object number) {
+		if ((number instanceof Double) || (number instanceof Float)) {
+			return (Double)number;
+		}
+		
 		if ((number == null) || !(number instanceof String)) {
 			return null;
 		}
@@ -253,6 +239,13 @@ public class JsonMessage {
 	}
 
 	public static Integer toInteger(Object number) {
+		if (number instanceof Integer) {
+			return (Integer)number;
+		}
+		if ((number != null) && (number instanceof Long)) {
+			return ((Long)number).intValue();
+		}
+		
 		if ((number == null) || !(number instanceof String)) {
 			return null;
 		}
@@ -265,6 +258,9 @@ public class JsonMessage {
 	}
 
 	public static boolean toBoolean(Object state) {
+		if (state instanceof Boolean) {
+			return (Boolean)state;
+		}
 		if ((state == null) || !(state instanceof String)) {
 			return false;
 		}

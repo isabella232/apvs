@@ -2,7 +2,6 @@ package ch.cern.atlas.apvs.domain;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,7 +35,7 @@ public class Measurement implements Message, Serializable, IsSerializable,
     private volatile Long id;
 	private Date time;
 	private Double value;
-	private volatile List<Double> valueList;
+	private Double[] valueList;
 	private String unit;
 	private String method;
 	private Integer samplingRate;
@@ -51,7 +50,7 @@ public class Measurement implements Message, Serializable, IsSerializable,
 	protected Measurement() {
 	}
 		
-	private Measurement(Device device, String sensor,
+	public Measurement(Device device, String sensor, Double value, Double[] valueList,
 			Double downThreshold, Double upThreshold, String unit,
 			Integer samplingRate, String method, Date time) {
 		setDevice(device);
@@ -63,6 +62,9 @@ public class Measurement implements Message, Serializable, IsSerializable,
 		setMethod(method);
 		setTime(time);
 		setConnected(true);
+		
+		setValue(value);
+		setValueList(valueList);
 
 		this.displayName = null;
 
@@ -71,26 +73,18 @@ public class Measurement implements Message, Serializable, IsSerializable,
 				&& (unit != null) && unit.equals("C")) {
 			this.unit = "&deg;C";
 		}
-	}	
-
+	}
+	
 	public Measurement(Device device, String sensor, Double value,
 			Double downThreshold, Double upThreshold, String unit,
 			Integer samplingRate, String method, Date time) {
-		this(device, sensor, downThreshold, upThreshold, unit, samplingRate, method, time);
-		setValue(value);
+		this(device, sensor, value, null, downThreshold, upThreshold, unit, samplingRate, method, time);		
 	}
-	
-	public Measurement(Device device, String sensor, List<Double> valueList,
-			Double downThreshold, Double upThreshold, String unit,
-			Integer samplingRate, String method, Date time) {
-		this(device, sensor, downThreshold, upThreshold, unit, samplingRate, method, time);
-		setValueList(valueList);
-	}
-	
+
 	public Measurement(Device device, String sensor, String displayName, Double value,
 			Double downThreshold, Double upThreshold, String unit,
 			Integer samplingRate, String method, Date time) {
-		this(device, sensor, value, downThreshold, upThreshold, unit, samplingRate, method, time);
+		this(device, sensor, value, null, downThreshold, upThreshold, unit, samplingRate, method, time);
 		this.displayName = displayName;
 	}
 	
@@ -132,12 +126,12 @@ public class Measurement implements Message, Serializable, IsSerializable,
 	}
 
 	@Column(name = "VALUE_TXT")
-	@Type(type="list_double_string")
-	public List<Double> getValueList() {
+	@Type(type="double_array_string")
+	public Double[] getValueList() {
 		return valueList;
 	}
 	
-	private void setValueList(List<Double> valueList) {
+	private void setValueList(Double[] valueList) {
 		this.valueList = valueList;
 	}
 
@@ -282,7 +276,7 @@ public class Measurement implements Message, Serializable, IsSerializable,
 	
 	public String toShortString() {
 		return "Measurement(" + getDevice().getName() + "): sensor:" + getSensor() + ", value:"
-				+ getValue() + ", unit:" + getUnit() + ", sampling rate:"
+				+ getValue() + ", valueList:"+(getValueList() != null ? "len(" + getValueList().length + ")" : "null") + ", unit:" + getUnit() + ", sampling rate:"
 				+ getSamplingRate();
 		// removed Date, too difficult
 	}

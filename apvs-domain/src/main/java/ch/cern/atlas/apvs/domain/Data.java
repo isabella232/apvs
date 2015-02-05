@@ -148,7 +148,7 @@ public class Data implements Serializable, IsSerializable {
 	public Measurement getMeasurement() {
 		int last = index - 1;
 		return index == 0 ? null : new Measurement(device, name,
-				(Double) data[last][VALUE], (Double) data[last][DOWN_THRESHOLD],
+				(Double) data[last][VALUE], null, (Double) data[last][DOWN_THRESHOLD],
 				(Double) data[last][UP_THRESHOLD], unit,
 				(Integer) data[last][SAMPLING_RATE], "Unknown", new Date(
 						data[last][TIME].longValue()));
