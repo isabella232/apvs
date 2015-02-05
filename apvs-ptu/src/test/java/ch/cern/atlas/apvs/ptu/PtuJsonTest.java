@@ -55,8 +55,8 @@ public class PtuJsonTest {
 		List<Message> list = header.getMessages(device);
 		Assert.assertEquals(3, list.size());
 //		 log.info(list.get(0).toString());
-		 log.info(list.get(1).toString());
-		 log.info(list.get(2).toString());
+//		 log.info(list.get(1).toString());
+//		 log.info(list.get(2).toString());
 		Assert.assertEquals(msg0, ((Measurement)list.get(0)).toShortString());
 		Assert.assertEquals(msg1, ((Measurement)list.get(1)).toShortString());
 		Assert.assertEquals(msg2, ((Measurement)list.get(2)).toShortString());
