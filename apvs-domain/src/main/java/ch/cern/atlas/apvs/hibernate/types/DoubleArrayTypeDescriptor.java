@@ -1,7 +1,5 @@
 package ch.cern.atlas.apvs.hibernate.types;
 
-import java.util.List;
-
 import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.type.descriptor.java.AbstractTypeDescriptor;
 
@@ -39,7 +37,7 @@ public class DoubleArrayTypeDescriptor extends AbstractTypeDescriptor<Double[]> 
 		if ( value == null ) {
 			return null;
 		}
-		if ( List.class.isAssignableFrom( type ) ) {
+		if ( Double[].class.isAssignableFrom( type ) ) {
 			return (X) value;
 		}
 		else if (String.class.isAssignableFrom( type ) ) {
@@ -52,7 +50,7 @@ public class DoubleArrayTypeDescriptor extends AbstractTypeDescriptor<Double[]> 
 		if ( value == null ) {
 			return null;
 		}
-		if ( List.class.isInstance( value ) ) {
+		if ( Double[].class.isInstance( value ) ) {
 			return (Double[]) value;
 		}
 		else if ( String.class.isInstance( value ) ) {
