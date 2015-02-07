@@ -27,7 +27,11 @@ public class DoubleArrayTypeDescriptor extends AbstractTypeDescriptor<Double[]> 
 		String[] p = string.split(",");
 		Double[] r = new Double[p.length];
 		for (int i=0; i<p.length; i++) {
-			r[i] = Double.parseDouble(p[i].trim());
+			try {
+			    r[i] = Double.parseDouble(p[i].trim());
+			} catch (NumberFormatException e) {
+				r[i] = null;
+			}
 		}
 		return r;
 	}
@@ -55,10 +59,8 @@ public class DoubleArrayTypeDescriptor extends AbstractTypeDescriptor<Double[]> 
 		}
 		else if ( String.class.isInstance( value ) ) {
 			try {
-				System.err.println("Value = '"+value+"'");
 				return fromString((String)value);
 			} catch (IllegalArgumentException e) {
-				System.err.println("Exc = "+e+" "+e.getCause());
 				throw unknownWrap( value.getClass() );
 			}
 		}
