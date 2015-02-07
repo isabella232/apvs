@@ -58,6 +58,7 @@ public class DoubleArrayTypeDescriptor extends AbstractTypeDescriptor<Double[]> 
 				System.err.println("Value = '"+value+"'");
 				return fromString((String)value);
 			} catch (IllegalArgumentException e) {
+				System.err.println("Exc = "+e+" "+e.getCause());
 				throw unknownWrap( value.getClass() );
 			}
 		}
