@@ -1,0 +1,298 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, min-scale=1" />
+<meta name="author" content="Mark Donszelmann" />
+<meta name="description" content="EDUSAFE Supervision System" />
+
+<link rel="shortcut icon" href="favicon.ico" />
+
+<!--                                           -->
+<!-- Any title is fine                         -->
+<!--                                           -->
+<title>EDUSAFE Supervision System</title>
+
+<!--                                           -->
+<!-- This script loads your compiled module.   -->
+<!-- If you add any GWT meta tags, they must   -->
+<!-- be added before this line.                -->
+<!--                                           -->
+<script type="text/javascript" src="apvs/apvs.nocache.js"></script>
+</head>
+
+<!--                                           -->
+<!-- The body can have arbitrary html, or      -->
+<!-- you can leave the body empty if you want  -->
+<!-- to create a completely dynamic UI.        -->
+<!--                                           -->
+<body>
+	<!-- OPTIONAL: include this if you want history support -->
+	<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
+		style="position: absolute; width: 0; height: 0; border: 0"></iframe>
+
+	<!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+	<noscript>
+		<div
+			style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+			Your web browser must have JavaScript enabled in order for this
+			application to display correctly.</div>
+	</noscript>
+
+	<div class="container">
+
+		<div class="page-header">
+			<h1>EDUSAFE Supervision System</h1>
+		</div>
+
+		<nav class="navbar navbar-default navbar-static-top" id="top">
+			<div class="navbar-header">
+				<a href="../" class="navbar-brand">EDUSS</a>
+				<button class="navbar-toggle" type="button" data-toggle="collapse"
+					data-target="#navbar-collapse">
+					<span class="sr-only">Toggle navigation</span> <i
+						class="fa fa-bars"></i>
+				</button>
+			</div>
+			<div
+				id="PtuTabSelector(tab, ptu, measurements, dosimeter; Cameras+; Interventions; Events; >; Summary+; Settings)"></div>
+		</nav>
+
+		<div id="Tab(tab; Ptu)">
+			<div class="row">
+				<div class="col-md-3">
+					<!--
+						<div class="col-md-6">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title" >Alarms</h3>
+							</div>
+							<div class="panel-body">
+								<div id="AlarmView(ptu; NoHeader)"></div>
+							</div>
+						</div>
+						</div>
+-->
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Audio</h3>
+						</div>
+						<div class="panel-body">
+							<div id="AudioView(ptu; NoHeader)"></div>
+						</div>
+					</div>
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Measurements</h3>
+						</div>
+						<div class="panel-body">
+							<div id="MeasurementView(measurements; NoHeader, NoSort)"></div>
+							<div id="TimeView(300; measurements; NoExport)"></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-9">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Helmet Camera</h3>
+						</div>
+						<div class="panel-body">
+							<div id="CameraView(ptu; Helmet)"></div>
+						</div>
+					</div>
+				</div>
+
+<!-- 
+				<div class="col-md-3">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Hand-held Camera</h3>
+						</div>
+						<div class="panel-body">
+							<div id="CameraView(ptu; Hand)"></div>
+						</div>
+					</div>
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Worker View</h3>
+						</div>
+						<div class="panel-body">
+							<div id="PlaceView()"></div>
+						</div>
+					</div>
+				</div>
+ -->
+			</div>
+
+			<div class="row">
+				<div class="col-md-3">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">General Info</h3>
+						</div>
+						<div class="panel-body">
+							<div id="GeneralInfoView(ptu; NoHeader)"></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Dosimeter</h3>
+						</div>
+						<div class="panel-body">
+							<div
+								id="MeasurementView(dosimeter; NoHeader, NoSort, NoSelection; DoseRate; DoseAccum)"></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Dose Rate</h3>
+						</div>
+						<div class="panel-body">
+							<div id="TimeView(200; ptu; NoTitle, NoExport; DoseRate)"></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Accumulated Dose</h3>
+						</div>
+						<div class="panel-body">
+							<div id="TimeView(200; ptu; NoTitle, NoExport; DoseAccum)"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="Tab(tab; Cameras)">
+			<div id="CameraTable()"></div>
+		</div>
+
+		<div id="Tab(tab; Interventions)">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Interventions</h3>
+						</div>
+						<div class="panel-body">
+							<div id="InterventionView(600px; tab)"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="Tab(tab; Events)">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">All Events</h3>
+						</div>
+						<div class="panel-body">
+							<div id="EventView(400px; tab)"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="Tab(tab; Summary)">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">All PTUs</h3>
+						</div>
+						<div class="panel-body">
+							<div id="PtuView(allPtus)"></div>
+						</div>
+						<div id="TimeView(200; allPtus)"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="Tab(tab; Settings)">
+			<div class="row">
+				<div class="col-md-12">
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">PTU Settings</h3>
+						</div>
+						<div class="panel-body">
+							<div id="PtuSettingsView()"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Server Settings</h3>
+						</div>
+						<div class="panel-body">
+							<div id="ServerSettingsView()"></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Audio Supervisor Settings</h3>
+						</div>
+						<div class="panel-body">
+							<div id="AudioSupervisorSettingsView()"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="Tab(tab; Calibration)">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Calibration</h3>
+						</div>
+						<div class="panel-body">
+							<div id="MeasurementConfigurationView(400px)"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row navbar-default">
+			<div class="col-md-4" id="footer-left"></div>
+			<div class="col-md-8" id="footer-right" align="right">
+				<p>
+					Copyright&copy; 2011-2015 CERN - <a
+						href="mailto:Mark.Donszelmann@cern.ch, eleni.adamidi@cern.ch">EDUSAFE Supervision
+						System</a> - ${project.version}
+				</p>
+			</div>
+		</div>
+
+	</div>
+
+</body>
+</html>

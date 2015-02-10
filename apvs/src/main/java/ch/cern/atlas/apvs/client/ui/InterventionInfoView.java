@@ -47,20 +47,20 @@ public class InterventionInfoView extends GlassPanel implements Module {
 	private EventBus cmdBus;
 
 	private Device ptu;
-	/*private Ternary serverOk = Ternary.Unknown;
+	private Ternary serverOk = Ternary.Unknown;
 	private String serverCause = "";
 	private Ternary audioOk = Ternary.Unknown;
 	private String audioCause = "";
 	private Ternary videoOk = Ternary.Unknown;
 	private String videoCause = "";
 	private Ternary daqOk = Ternary.Unknown;
-	private String daqCause = "";*/
+	private String daqCause = "";
 	private Ternary dosimeterOk = Ternary.Unknown;
 	private String dosimeterCause = "";
-	/*private Ternary databaseConnectOk = Ternary.Unknown;
+	private Ternary databaseConnectOk = Ternary.Unknown;
 	private String databaseConnectCause = "";
 	private Ternary databaseUpdateOk = Ternary.Unknown;
-	private String databaseUpdateCause = "";*/
+	private String databaseUpdateCause = "";
 
 	private InterventionMap interventions;
 	private PtuSettings ptuSettings;
@@ -119,7 +119,7 @@ public class InterventionInfoView extends GlassPanel implements Module {
 		cell.setEnabled(false);
 		Column<String, Object> column = new Column<String, Object>(cell) {
 			public String getCause(String name) {
-				/*if (name.equals(ConnectionType.server.getString())) {
+				if (name.equals(ConnectionType.server.getString())) {
 					return serverCause;
 				} else if (name.equals(ConnectionType.audio.getString())) {
 					return audioCause;
@@ -134,9 +134,8 @@ public class InterventionInfoView extends GlassPanel implements Module {
 					return databaseConnectCause;
 				} else if (name.equals(ConnectionType.databaseUpdate
 						.getString())) {
-					return databaseUpdateCause;*/
-					
-					if (name.equals("Start Time")) {
+					return databaseUpdateCause;
+				} else if (name.equals("Start Time")) {
 					return "";
 				} else if (name.equals("Duration")) {
 					return "";
@@ -153,7 +152,7 @@ public class InterventionInfoView extends GlassPanel implements Module {
 
 			@Override
 			public Object getValue(String name) {
-				/*if (name.equals(ConnectionType.server.getString())) {
+				if (name.equals(ConnectionType.server.getString())) {
 					return serverOk;
 				} else if (name.equals(ConnectionType.audio.getString())) {
 					return audioOk;
@@ -168,9 +167,8 @@ public class InterventionInfoView extends GlassPanel implements Module {
 					return databaseConnectOk;
 				} else if (name.equals(ConnectionType.databaseUpdate
 						.getString())) {
-					return databaseUpdateOk;*/
-					
-				if (name.equals("Start Time")) {
+					return databaseUpdateOk;
+				} else if (name.equals("Start Time")) {
 					return getStartTime();
 				} else if (name.equals("Duration")) {
 					Date startTime = getStartTime();
@@ -217,7 +215,7 @@ public class InterventionInfoView extends GlassPanel implements Module {
 					public void onConnectionStatusChanged(
 							ConnectionStatusChangedRemoteEvent event) {
 						switch (event.getConnection()) {
-						/*case server:
+						case server:
 							serverOk = event.getStatus();
 							serverCause = event.getCause();
 							break;
@@ -232,19 +230,19 @@ public class InterventionInfoView extends GlassPanel implements Module {
 						case daq:
 							daqOk = event.getStatus();
 							daqCause = event.getCause();
-							break;*/
+							break;
 						case dosimeter:
 							dosimeterOk = event.getStatus();
 							dosimeterCause = event.getCause();
 							break;
-						/*case databaseConnect:
+						case databaseConnect:
 							databaseConnectOk = event.getStatus();
 							databaseConnectCause = event.getCause();
 							break;
 						case databaseUpdate:
 							databaseUpdateOk = event.getStatus();
 							databaseUpdateCause = event.getCause();
-							break;*/
+							break;
 						default:
 							return;
 						}

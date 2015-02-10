@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+	<display-name>apvs</display-name>
+
+	<servlet>
+		<description>APVSServlet</description>
+		<servlet-name>APVSServlet</servlet-name>
+		<servlet-class>org.atmosphere.cpr.AtmosphereServlet</servlet-class>
+		<init-param>
+			<!-- prevent deadlocks -->
+			<param-name>org.atmosphere.disableOnStateEvent</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>org.atmosphere.cpr.broadcasterCacheClass</param-name>
+			<param-value>org.atmosphere.cache.HeaderBroadcasterCache</param-value>
+		</init-param>
+		<init-param>
+			<param-name>org.atmosphere.cpr.sessionSupport</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<!-- make sure disconnect is called for tomcat and jetty within 60 seconds -->
+		<!-- <init-param> <param-name>org.atmosphere.cpr.CometSupport.maxInactiveActivity</param-name> 
+			<param-value>60000</param-value> </init-param> <init-param> <param-name>org.atmosphere.cpr.AtmosphereInterceptor</param-name> 
+			<param-value>org.atmosphere.interceptor.HeartbeatInterceptor</param-value> 
+			</init-param> <init-param> <param-name>org.atmosphere.interceptor.HeartbeatInterceptor.heartbeatFrequencyInSeconds</param-name> 
+			<param-value>30</param-value> </init-param> -->
+		<load-on-startup>1</load-on-startup>
+		<async-supported>true</async-supported>
+	</servlet>
+
+	<!-- remote logging -->
+	<servlet>
+		<servlet-name>remoteLogging</servlet-name>
+		<servlet-class>com.google.gwt.logging.server.RemoteLoggingServiceImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>remoteLogging</servlet-name>
+		<url-pattern>/apvs/remote_logging</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>APVSServlet</servlet-name>
+		<url-pattern>/apvs/eventBusComet</url-pattern>
+		<url-pattern>/apvs/eventBusService</url-pattern>
+		<url-pattern>/apvs/apvsPing</url-pattern>
+		<url-pattern>/apvs/apvsServer</url-pattern>
+		<url-pattern>/apvs/apvsComet</url-pattern>
+		<url-pattern>/apvs/apvsPtu</url-pattern>
+		<url-pattern>/apvs/apvsDb</url-pattern>
+		<url-pattern>/apvs/apvsAudio</url-pattern>
+		<url-pattern>/apvs/apvsEvent</url-pattern>
+		<url-pattern>/apvs/apvsIntervention</url-pattern>
+		<url-pattern>/apvs/apvsVideo</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+</web-app>
