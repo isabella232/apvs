@@ -71,13 +71,14 @@ public class InterventionInfoView extends GlassPanel implements Module {
 
 	private List<String> names = Arrays
 			.asList(new String[] {
-					ConnectionType.server.getString(),
-					ConnectionType.audio.getString(), 
-					ConnectionType.video.getString(),
-					ConnectionType.daq.getString(),
+//					ConnectionType.server.getString(),
+//					ConnectionType.audio.getString(),
+//					ConnectionType.video.getString(),
+//					ConnectionType.daq.getString(),
 					ConnectionType.dosimeter.getString(),
-					ConnectionType.databaseConnect.getString(),
-					ConnectionType.databaseUpdate.getString(), "Start Time", "Duration", "Dosimeter", "Wireless" });
+//					ConnectionType.databaseConnect.getString(),
+//					ConnectionType.databaseUpdate.getString(),
+					"Start Time", "Duration", "Dosimeter", "Wireless" });
 	private List<Class<?>> classes = Arrays
 			.asList(new Class<?>[] { TextCell.class,
 					TextCell.class, TextCell.class,
@@ -93,7 +94,7 @@ public class InterventionInfoView extends GlassPanel implements Module {
 	@Override
 	public boolean configure(Element element, ClientFactory clientFactory,
 			Arguments args) {
-		
+
 		cmdBus = clientFactory.getEventBus(args.getArg(0));
 		options = args.getArg(1);
 
@@ -159,8 +160,8 @@ public class InterventionInfoView extends GlassPanel implements Module {
 					return videoOk;
 				} else if (name.equals(ConnectionType.daq.getString())) {
 					return daqOk;
-				/*} else if (name.equals(ConnectionType.dosimeter.getString())) {
-					return dosimeterOk;*/
+				} else if (name.equals(ConnectionType.dosimeter.getString())) {
+					return dosimeterOk;
 				} else if (name.equals(ConnectionType.databaseConnect
 						.getString())) {
 					return databaseConnectOk;
@@ -177,7 +178,7 @@ public class InterventionInfoView extends GlassPanel implements Module {
 					return getDosimeterSerialNumber();
 				} else if (name.equals("Wireless")) {
 					return getBSSID();
-				} 
+				}
 				log.warn("GeneralInfoView name unknown '" + name
 						+ "'");
 				return null;
@@ -206,7 +207,7 @@ public class InterventionInfoView extends GlassPanel implements Module {
 		dataProvider.addDataDisplay(table);
 		dataProvider.setList(names);
 
-		ConnectionStatusChangedRemoteEvent.subscribe(this, 
+		ConnectionStatusChangedRemoteEvent.subscribe(this,
 				clientFactory.getRemoteEventBus(),
 				new ConnectionStatusChangedRemoteEvent.Handler() {
 
@@ -249,7 +250,7 @@ public class InterventionInfoView extends GlassPanel implements Module {
 					}
 				});
 
-		InterventionMapChangedRemoteEvent.subscribe(this, 
+		InterventionMapChangedRemoteEvent.subscribe(this,
 				clientFactory.getRemoteEventBus(),
 				new InterventionMapChangedRemoteEvent.Handler() {
 
@@ -260,9 +261,9 @@ public class InterventionInfoView extends GlassPanel implements Module {
 						scheduler.update();
 					}
 				});
-		
+
 		PtuSettingsChangedRemoteEvent.subscribe(this, clientFactory.getRemoteEventBus(), new PtuSettingsChangedRemoteEvent.Handler() {
-			
+
 			@Override
 			public void onPtuSettingsChanged(PtuSettingsChangedRemoteEvent event) {
 				ptuSettings = event.getPtuSettings();
@@ -300,28 +301,28 @@ public class InterventionInfoView extends GlassPanel implements Module {
 
 		return intervention.getStartTime();
 	}
-	
+
 	private String getDosimeterSerialNumber() {
 		if (ptu == null) {
 			return null;
 		}
-		
+
 		if (ptuSettings == null) {
 			return null;
 		}
-		
+
 		return ptuSettings.getDosimeterSerialNumber(ptu.getName());
 	}
-	
+
 	private String getBSSID() {
 		if (ptu == null) {
 			return null;
 		}
-		
+
 		if (ptuSettings == null) {
 			return null;
 		}
-		
+
 		return ptuSettings.getBSSID(ptu.getName());
 	}
 

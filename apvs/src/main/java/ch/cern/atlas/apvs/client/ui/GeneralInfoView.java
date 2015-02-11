@@ -55,8 +55,8 @@ public class GeneralInfoView extends GlassPanel implements Module {
 	private String videoCause = "";
 	private Ternary daqOk = Ternary.Unknown;
 	private String daqCause = "";
-	//private Ternary dosimeterOk = Ternary.Unknown;
-	//private String dosimeterCause = "";
+	private Ternary dosimeterOk = Ternary.Unknown;
+	private String dosimeterCause = "";
 	private Ternary databaseConnectOk = Ternary.Unknown;
 	private String databaseConnectCause = "";
 	private Ternary databaseUpdateOk = Ternary.Unknown;
@@ -72,7 +72,7 @@ public class GeneralInfoView extends GlassPanel implements Module {
 	private List<String> names = Arrays
 			.asList(new String[] {
 					ConnectionType.server.getString(),
-					ConnectionType.audio.getString(), 
+					ConnectionType.audio.getString(),
 					ConnectionType.video.getString(),
 					ConnectionType.daq.getString(),
 					// ConnectionType.dosimeter.getString(),
@@ -93,7 +93,7 @@ public class GeneralInfoView extends GlassPanel implements Module {
 	@Override
 	public boolean configure(Element element, ClientFactory clientFactory,
 			Arguments args) {
-		
+
 		cmdBus = clientFactory.getEventBus(args.getArg(0));
 		options = args.getArg(1);
 
@@ -126,8 +126,8 @@ public class GeneralInfoView extends GlassPanel implements Module {
 					return videoCause;
 				} else if (name.equals(ConnectionType.daq.getString())) {
 					return daqCause;
-				//} else if (name.equals(ConnectionType.dosimeter.getString())) {
-				//	return dosimeterCause;
+				} else if (name.equals(ConnectionType.dosimeter.getString())) {
+					return dosimeterCause;
 				} else if (name.equals(ConnectionType.databaseConnect
 						.getString())) {
 					return databaseConnectCause;
@@ -138,8 +138,8 @@ public class GeneralInfoView extends GlassPanel implements Module {
 					return "";
 				} else if (name.equals("Duration")) {
 					return "";
-//				} else if (name.equals("Dosimeter")) {
-//					return "";
+				} else if (name.equals("Dosimeter")) {
+					return "";
 				} else if (name.equals("Wireless")) {
 					return "";
 				}
@@ -159,8 +159,8 @@ public class GeneralInfoView extends GlassPanel implements Module {
 					return videoOk;
 				} else if (name.equals(ConnectionType.daq.getString())) {
 					return daqOk;
-				/*} else if (name.equals(ConnectionType.dosimeter.getString())) {
-					return dosimeterOk;*/
+				} else if (name.equals(ConnectionType.dosimeter.getString())) {
+					return dosimeterOk;
 				} else if (name.equals(ConnectionType.databaseConnect
 						.getString())) {
 					return databaseConnectOk;
@@ -173,11 +173,11 @@ public class GeneralInfoView extends GlassPanel implements Module {
 					Date startTime = getStartTime();
 					return startTime != null ? new Date().getTime()
 							- startTime.getTime() : null;
-				//} else if (name.equals("Dosimeter")) {
-					//return getDosimeterSerialNumber();
+				} else if (name.equals("Dosimeter")) {
+					return getDosimeterSerialNumber();
 				} else if (name.equals("Wireless")) {
 					return getBSSID();
-				} 
+				}
 				log.warn("GeneralInfoView name unknown '" + name
 						+ "'");
 				return null;
@@ -206,7 +206,7 @@ public class GeneralInfoView extends GlassPanel implements Module {
 		dataProvider.addDataDisplay(table);
 		dataProvider.setList(names);
 
-		ConnectionStatusChangedRemoteEvent.subscribe(this, 
+		ConnectionStatusChangedRemoteEvent.subscribe(this,
 				clientFactory.getRemoteEventBus(),
 				new ConnectionStatusChangedRemoteEvent.Handler() {
 
@@ -230,10 +230,10 @@ public class GeneralInfoView extends GlassPanel implements Module {
 							daqOk = event.getStatus();
 							daqCause = event.getCause();
 							break;
-						//case dosimeter:
-							//dosimeterOk = event.getStatus();
-							//dosimeterCause = event.getCause();
-							//break;
+						case dosimeter:
+							dosimeterOk = event.getStatus();
+							dosimeterCause = event.getCause();
+							break;
 						case databaseConnect:
 							databaseConnectOk = event.getStatus();
 							databaseConnectCause = event.getCause();
@@ -249,7 +249,7 @@ public class GeneralInfoView extends GlassPanel implements Module {
 					}
 				});
 
-		InterventionMapChangedRemoteEvent.subscribe(this, 
+		InterventionMapChangedRemoteEvent.subscribe(this,
 				clientFactory.getRemoteEventBus(),
 				new InterventionMapChangedRemoteEvent.Handler() {
 
@@ -260,9 +260,9 @@ public class GeneralInfoView extends GlassPanel implements Module {
 						scheduler.update();
 					}
 				});
-		
+
 		PtuSettingsChangedRemoteEvent.subscribe(this, clientFactory.getRemoteEventBus(), new PtuSettingsChangedRemoteEvent.Handler() {
-			
+
 			@Override
 			public void onPtuSettingsChanged(PtuSettingsChangedRemoteEvent event) {
 				ptuSettings = event.getPtuSettings();
@@ -300,28 +300,28 @@ public class GeneralInfoView extends GlassPanel implements Module {
 
 		return intervention.getStartTime();
 	}
-	
+
 	private String getDosimeterSerialNumber() {
 		if (ptu == null) {
 			return null;
 		}
-		
+
 		if (ptuSettings == null) {
 			return null;
 		}
-		
+
 		return ptuSettings.getDosimeterSerialNumber(ptu.getName());
 	}
-	
+
 	private String getBSSID() {
 		if (ptu == null) {
 			return null;
 		}
-		
+
 		if (ptuSettings == null) {
 			return null;
 		}
-		
+
 		return ptuSettings.getBSSID(ptu.getName());
 	}
 
