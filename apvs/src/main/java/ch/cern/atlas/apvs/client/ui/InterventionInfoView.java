@@ -75,10 +75,9 @@ public class InterventionInfoView extends GlassPanel implements Module {
 					ConnectionType.audio.getString(), 
 					ConnectionType.video.getString(),
 					ConnectionType.daq.getString(),
-					// ConnectionType.dosimeter.getString(),
+					ConnectionType.dosimeter.getString(),
 					ConnectionType.databaseConnect.getString(),
-					ConnectionType.databaseUpdate.getString(), "Start Time",
-					"Duration", "Dosimeter", "Wireless" });
+					ConnectionType.databaseUpdate.getString(), "Start Time", "Duration", "Dosimeter", "Wireless" });
 	private List<Class<?>> classes = Arrays
 			.asList(new Class<?>[] { TextCell.class,
 					TextCell.class, TextCell.class,
@@ -144,7 +143,7 @@ public class InterventionInfoView extends GlassPanel implements Module {
 				} else if (name.equals("Wireless")) {
 					return "";
 				}
-				log.warn("InterventionInfoView name unknown '" + name
+				log.warn("GeneralInfoView name unknown '" + name
 						+ "'");
 				return "";
 
@@ -160,8 +159,8 @@ public class InterventionInfoView extends GlassPanel implements Module {
 					return videoOk;
 				} else if (name.equals(ConnectionType.daq.getString())) {
 					return daqOk;
-				} else if (name.equals(ConnectionType.dosimeter.getString())) {
-					return dosimeterOk;
+				/*} else if (name.equals(ConnectionType.dosimeter.getString())) {
+					return dosimeterOk;*/
 				} else if (name.equals(ConnectionType.databaseConnect
 						.getString())) {
 					return databaseConnectOk;
@@ -179,7 +178,7 @@ public class InterventionInfoView extends GlassPanel implements Module {
 				} else if (name.equals("Wireless")) {
 					return getBSSID();
 				} 
-				log.warn("InterventionInfoView name unknown '" + name
+				log.warn("GeneralInfoView name unknown '" + name
 						+ "'");
 				return null;
 			}
