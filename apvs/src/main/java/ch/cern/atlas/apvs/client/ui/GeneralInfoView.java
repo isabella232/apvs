@@ -75,15 +75,15 @@ public class GeneralInfoView extends GlassPanel implements Module {
 					ConnectionType.audio.getString(),
 					ConnectionType.video.getString(),
 					ConnectionType.daq.getString(),
-					// ConnectionType.dosimeter.getString(),
 					ConnectionType.databaseConnect.getString(),
 					ConnectionType.databaseUpdate.getString() });
 	private List<Class<?>> classes = Arrays
 			.asList(new Class<?>[] { TextCell.class,
 					TextCell.class, TextCell.class,
-					TextCell.class, // TextCell.class,
-					TextCell.class, TextCell.class, DateCell.class,
-					DurationCell.class, TextCell.class, TextCell.class });
+					TextCell.class,
+					TextCell.class,
+					TextCell.class
+					});
 
 	private UpdateScheduler scheduler = new UpdateScheduler(this);
 

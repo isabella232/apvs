@@ -71,20 +71,12 @@ public class InterventionInfoView extends GlassPanel implements Module {
 
 	private List<String> names = Arrays
 			.asList(new String[] {
-//					ConnectionType.server.getString(),
-//					ConnectionType.audio.getString(),
-//					ConnectionType.video.getString(),
-//					ConnectionType.daq.getString(),
 					ConnectionType.dosimeter.getString(),
-//					ConnectionType.databaseConnect.getString(),
-//					ConnectionType.databaseUpdate.getString(),
 					"Start Time", "Duration", "Dosimeter", "Wireless" });
 	private List<Class<?>> classes = Arrays
-			.asList(new Class<?>[] { TextCell.class,
-					TextCell.class, TextCell.class,
-					TextCell.class, // TextCell.class,
-					TextCell.class, TextCell.class, DateCell.class,
-					DurationCell.class, TextCell.class, TextCell.class });
+			.asList(new Class<?>[] {
+					TextCell.class,
+					DateCell.class, DurationCell.class, TextCell.class, TextCell.class });
 
 	private UpdateScheduler scheduler = new UpdateScheduler(this);
 
