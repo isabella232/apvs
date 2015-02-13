@@ -72,7 +72,7 @@ public class InterventionInfoView extends GlassPanel implements Module {
 	private List<String> names = Arrays
 			.asList(new String[] {
 					ConnectionType.dosimeter.getString(),
-					"Start Time", "Duration", "Dosimeter", "Wireless" });
+					"Start Time", "Duration", "Dosimeter" });
 	private List<Class<?>> classes = Arrays
 			.asList(new Class<?>[] {
 					TextCell.class,
