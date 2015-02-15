@@ -32,8 +32,8 @@ public class FilterEncoder extends MessageToMessageEncoder<Packet> {
 			if (msg.getType().equals("Measurement")) {
 				Measurement measurement = (Measurement)msg;
 //				log.info(measurement.getSensor());
-				if (measurement.getSensor().equals("DoseRate") ||
-				   (measurement.getSensor().equals("DoseAccum"))) {
+				//if (measurement.getSensor().equals("DoseRate") ||
+				   if (measurement.getSensor().equals("DoseAccum")) {
 					outPacket.addMessage(measurement);
 				}
 			}
