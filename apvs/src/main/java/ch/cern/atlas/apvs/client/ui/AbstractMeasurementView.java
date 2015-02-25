@@ -225,7 +225,7 @@ public abstract class AbstractMeasurementView extends GlassPanel implements
 					public void onMeasurementChanged(
 							MeasurementChangedEvent event) {
 						Measurement measurement = event.getMeasurement();
-						if (measurement.getDevice().getName().equals(ptu)) {
+						if (measurement.getDevice().equals(ptu)) {
 							last = replace(measurement);
 							scheduler.update();
 						}
@@ -280,7 +280,7 @@ public abstract class AbstractMeasurementView extends GlassPanel implements
 			if ((show == null) || (show.size() == 0)
 					|| (show.contains(measurement.getSensor()))) {
 				list.add(measurement.getSensor());
-				lastValue = measurement;
+//				lastValue = measurement;
 			} else {
 				lastValue = null;
 			}
