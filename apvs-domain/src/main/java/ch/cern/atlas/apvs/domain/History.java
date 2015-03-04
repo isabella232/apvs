@@ -45,12 +45,20 @@ public class History implements Serializable, IsSerializable {
 		deviceData.put(data);
 	}
 
-	public Measurement getMeasurement(Device device, String sensor) {
+	public Measurement getCurrentMeasurement(Device device, String sensor) {
 		Data data = get(device, sensor);
 		if (data == null) {
 			return null;
 		}
-		return data.getMeasurement();
+		return data.getCurrentMeasurement();
+	}
+
+	public Measurement getLastMeasurement(Device device, String sensor) {
+		Data data = get(device, sensor);
+		if (data == null) {
+			return null;
+		}
+		return data.getLastMeasurement();
 	}
 
 	public List<Measurement> getMeasurements(Device device) {

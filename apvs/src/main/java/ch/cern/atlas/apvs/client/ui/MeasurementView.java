@@ -5,8 +5,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import ch.cern.atlas.apvs.client.ClientFactory;
-import ch.cern.atlas.apvs.client.widget.ClickableHtmlColumn;
 import ch.cern.atlas.apvs.client.widget.ActiveClickableTextCell;
+import ch.cern.atlas.apvs.client.widget.ClickableHtmlColumn;
 import ch.cern.atlas.apvs.client.widget.ClickableTextColumn;
 import ch.cern.atlas.apvs.domain.ClientConstants;
 import ch.cern.atlas.apvs.domain.Measurement;
@@ -58,7 +58,7 @@ public class MeasurementView extends AbstractMeasurementView {
 			@Override
 			public void render(Context context, String name, SafeHtmlBuilder sb) {
 				String s = getValue(name);
-				Measurement m = history.getMeasurement(ptu, name);
+				Measurement m = history.getCurrentMeasurement(ptu, name);
 				if (m == null) {
 					return;
 				}
@@ -152,18 +152,21 @@ public class MeasurementView extends AbstractMeasurementView {
 				if ((name == null) || (history == null) || (ptu == null)) {
 					return "";
 				}
-				Measurement m = history.getMeasurement(ptu, name);
+				Measurement m = history.getCurrentMeasurement(ptu, name);
 				return m != null ? format.format(m.getValue()) : "";
 			}
 
 			@Override
 			public void render(Context context, String name, SafeHtmlBuilder sb) {
 				String s = getValue(name);
-				Measurement m = history != null ? history.getMeasurement(
+				Measurement m = history != null ? history.getCurrentMeasurement(
 						ptu, name) : null;
 				if (m == null) {
 					return;
 				}
+				
+				Measurement last = history != null ? history.getLastMeasurement(
+						ptu, name) : null;
 
 				double c = m.getValue().doubleValue();
 				Double lo = m.getDownThreshold();
@@ -176,7 +179,7 @@ public class MeasurementView extends AbstractMeasurementView {
 
 				((ActiveClickableTextCell) getCell()).render(context,
 						decorate(s, m, last), sb);
-
+				
 				sb.append(SafeHtmlUtils.fromSafeConstant("</div>"));
 			}
 
@@ -197,7 +200,7 @@ public class MeasurementView extends AbstractMeasurementView {
 		ClickableHtmlColumn<String> unit = new ClickableHtmlColumn<String>() {
 			@Override
 			public String getValue(String name) {
-				Measurement m = history != null ? history.getMeasurement(
+				Measurement m = history != null ? history.getCurrentMeasurement(
 						ptu, name) : null;
 				return m != null ? m.getUnit() : "";
 			}
@@ -205,7 +208,7 @@ public class MeasurementView extends AbstractMeasurementView {
 			@Override
 			public void render(Context context, String name, SafeHtmlBuilder sb) {
 				String s = getValue(name);
-				Measurement m = history != null ? history.getMeasurement(
+				Measurement m = history != null ? history.getCurrentMeasurement(
 						ptu, name) : null;
 				if (m == null) {
 					return;
@@ -232,7 +235,7 @@ public class MeasurementView extends AbstractMeasurementView {
 			@Override
 			public String getValue(String name) {
 				Measurement measurement = history
-						.getMeasurement(ptu, name);
+						.getCurrentMeasurement(ptu, name);
 				return measurement != null ? ClientConstants.dateFormat
 						.format(measurement.getTime()) : "";
 			}
@@ -240,7 +243,7 @@ public class MeasurementView extends AbstractMeasurementView {
 			@Override
 			public void render(Context context, String name, SafeHtmlBuilder sb) {
 				String s = getValue(name);
-				Measurement m = history.getMeasurement(ptu, name);
+				Measurement m = history.getCurrentMeasurement(ptu, name);
 				if (m == null) {
 					return;
 				}
@@ -283,8 +286,8 @@ public class MeasurementView extends AbstractMeasurementView {
 		});
 		columnSortHandler.setComparator(value, new Comparator<String>() {
 			public int compare(String s1, String s2) {
-				Measurement o1 = history.getMeasurement(ptu, s1);
-				Measurement o2 = history.getMeasurement(ptu, s2);
+				Measurement o1 = history.getCurrentMeasurement(ptu, s1);
+				Measurement o2 = history.getCurrentMeasurement(ptu, s2);
 
 				if (o1 == o2) {
 					return 0;
@@ -303,8 +306,8 @@ public class MeasurementView extends AbstractMeasurementView {
 		});
 		columnSortHandler.setComparator(unit, new Comparator<String>() {
 			public int compare(String s1, String s2) {
-				Measurement o1 = history.getMeasurement(ptu, s1);
-				Measurement o2 = history.getMeasurement(ptu, s2);
+				Measurement o1 = history.getCurrentMeasurement(ptu, s1);
+				Measurement o2 = history.getCurrentMeasurement(ptu, s2);
 
 				if (o1 == o2) {
 					return 0;
@@ -319,8 +322,8 @@ public class MeasurementView extends AbstractMeasurementView {
 		});
 		columnSortHandler.setComparator(date, new Comparator<String>() {
 			public int compare(String s1, String s2) {
-				Measurement o1 = history.getMeasurement(ptu, s1);
-				Measurement o2 = history.getMeasurement(ptu, s2);
+				Measurement o1 = history.getCurrentMeasurement(ptu, s1);
+				Measurement o2 = history.getCurrentMeasurement(ptu, s2);
 
 				if (o1 == o2) {
 					return 0;

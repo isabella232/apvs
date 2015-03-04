@@ -23,6 +23,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.web.bindery.event.shared.EventBus;
@@ -35,7 +36,6 @@ public abstract class AbstractMeasurementView extends GlassPanel implements
 
 	protected History history;
 	protected InterventionMap interventions;
-	protected Measurement last = null;
 	protected ListDataProvider<String> dataProvider = new ListDataProvider<String>();
 	protected SingleSelectionModel<String> selectionModel;
 
@@ -197,7 +197,6 @@ public abstract class AbstractMeasurementView extends GlassPanel implements
 
 	private void changePtuId() {
 		dataProvider.getList().clear();
-		last = null;
 		if (measurementHandler != null) {
 			measurementHandler.removeHandler();
 			measurementHandler = null;
@@ -226,7 +225,7 @@ public abstract class AbstractMeasurementView extends GlassPanel implements
 							MeasurementChangedEvent event) {
 						Measurement measurement = event.getMeasurement();
 						if (measurement.getDevice().equals(ptu)) {
-							last = replace(measurement);
+							replace(measurement);
 							scheduler.update();
 						}
 					}
@@ -273,14 +272,14 @@ public abstract class AbstractMeasurementView extends GlassPanel implements
 		}	
 
 		List<String> list = dataProvider.getList();
-		Measurement lastValue = history.getMeasurement(
+		Measurement lastValue = history.getLastMeasurement(
 				measurement.getDevice(), measurement.getSensor());
-
+	
 		if (!list.contains(measurement.getSensor())) {
 			if ((show == null) || (show.size() == 0)
 					|| (show.contains(measurement.getSensor()))) {
 				list.add(measurement.getSensor());
-//				lastValue = measurement;
+				lastValue = measurement;
 			} else {
 				lastValue = null;
 			}
