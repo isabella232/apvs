@@ -25,7 +25,6 @@ import ch.cern.atlas.apvs.client.ui.GeneralInfoView;
 import ch.cern.atlas.apvs.client.ui.InterventionInfoView;
 import ch.cern.atlas.apvs.client.ui.InterventionView;
 import ch.cern.atlas.apvs.client.ui.MeasurementConfigurationView;
-import ch.cern.atlas.apvs.client.ui.MeasurementTable;
 import ch.cern.atlas.apvs.client.ui.MeasurementView;
 import ch.cern.atlas.apvs.client.ui.Module;
 import ch.cern.atlas.apvs.client.ui.PlaceView;
@@ -258,8 +257,6 @@ public class APVS implements EntryPoint {
 				// FIXME handle generically
 				if (id.startsWith("MeasurementView")) {
 					module = new MeasurementView();
-				} else if (id.startsWith("MeasurementTable")) {
-					module = new MeasurementTable();
 				} else if (id.startsWith("AlarmView")) {
 					module = new AlarmView();
 				} else if (id.startsWith("AudioSummary")) {

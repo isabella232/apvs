@@ -236,7 +236,7 @@ public class PtuView extends GlassPanel implements Module {
 		if ((ptus == null) || !ptus.contains(ptu))
 			return null;
 
-		Measurement lastValue = history != null ? history.getMeasurement(ptu, sensor) : measurement;
+		Measurement lastValue = history != null ? history.getLastMeasurement(ptu, sensor) : measurement;
 
 		addRow(sensor);
 
@@ -253,7 +253,7 @@ public class PtuView extends GlassPanel implements Module {
 		ClickableTextColumn<String> column = new ClickableTextColumn<String>() {
 			@Override
 			public String getValue(String name) {
-				Measurement m = history != null ? history.getMeasurement(ptu, name) : null;
+				Measurement m = history != null ? history.getCurrentMeasurement(ptu, name) : null;
 				if (m == null) {
 					return "";
 				}
@@ -270,7 +270,7 @@ public class PtuView extends GlassPanel implements Module {
 									+ color + "\">"));
 				}
 
-				Measurement m = history != null ? history.getMeasurement(ptu, name) : null;
+				Measurement m = history != null ? history.getCurrentMeasurement(ptu, name) : null;
 				if (m != null) {
 					((ActiveClickableTextCell) getCell()).render(context,
 							MeasurementView.decorate(getValue(name), m, last),
