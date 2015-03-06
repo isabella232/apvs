@@ -27,6 +27,7 @@ public class DatabaseWriter {
 
 			@Override
 			public void onMessageReceived(MessageEvent messageEvent) {
+				System.err.println("DB "+messageEvent);
 				if (messageEvent.getPrefix().equals("IN")) {
 					Packet packet = messageEvent.getPacket();
 

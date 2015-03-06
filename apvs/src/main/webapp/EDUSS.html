@@ -48,9 +48,9 @@
 			application to display correctly.</div>
 	</noscript>
 
-	<div class="container">
+	<div class="container-fluid">
 		<div class="page-header">
-         <h1><img src="images/Edusafelogo-transparent.png" width="110" height="42" align="left"/>  <center>EDUSAFE Supervision System</center></h1>
+         <h1><img src="images/Edusafelogo.png" width="110" height="42" align="left"/>  <center>EDUSAFE Supervision System</center></h1>
 		</div>
 
 		<nav class="navbar navbar-default navbar-static-top" id="top">
@@ -62,12 +62,14 @@
 						class="fa fa-bars"></i>
 				</button>
 			</div>
-			<div id="PtuTabSelector(tab, ptu, measurements, dosimeter; Cameras+; History;>; Summary+; Settings)"></div>
+			<div id="PtuTabSelector(tab, ptu, measurements, dosimeter; Cameras+; Gamma camera; History;>; General Info; Summary+; Settings)"></div>
 		</nav>
 
 		<div id="Tab(tab; Ptu)">
 			<div class="row">
 				<div class="col-md-3">
+				  <div class="row">
+
 					<!--
 						<div class="col-md-6">
 						<div class="panel panel-default">
@@ -80,6 +82,7 @@
 						</div>
 						</div>
 -->
+                <div class="col-md-5">
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h3 class="panel-title">Audio</h3>
@@ -88,29 +91,73 @@
 							<div id="AudioView(ptu; NoHeader)"></div>
 						</div>
 					</div>
+                </div>
 
+				<div class="col-md-7">
 					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Intervention Info</h3>
+						</div>
+						<div class="panel-body">
+							<div id="InterventionInfoView(ptu; NoHeader)"></div>
+						</div>
+					</div>
+				</div>
+           </div>
+                 <div class="panel panel-default">
 						<div class="panel-heading">
 							<h3 class="panel-title">Measurements</h3>
 						</div>
 						<div class="panel-body">
-							<div id="MeasurementView(measurements; NoHeader, NoSort)"></div>
+			            				<div id="MeasurementView(measurements; NoHeader, NoSort)"></div>
 							<div id="TimeView(300; measurements; NoExport)"></div>
 						</div>
 					</div>
-				</div>
+        </div>
 
-				<div class="col-md-9">
+				<div class="col-md-6">
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<h3 class="panel-title">Helmet Camera</h3>
 						</div>
-						<div class="panel-body">
+						<div class="panel-body" style="height:100%;">
+
 							<div id="CameraView(ptu; Helmet)"></div>
 						</div>
 					</div>
 				</div>
+				<div class="col-md-3">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Dosimeter</h3>
+						</div>
+						<div class="panel-body">
+							<div
+								id="MeasurementView(dosimeter; NoHeader, NoSort, NoSelection; DoseRate; DoseAccum)"></div>
+						</div>
+					</div>
 
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Dose Rate</h3>
+						</div>
+						<div class="panel-body">
+							<div id="TimeView(200; ptu; NoTitle, NoExport; DoseRate)"></div>
+						</div>
+					</div>
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Accumulated Dose</h3>
+						</div>
+						<div class="panel-body">
+							<div id="TimeView(200; ptu; NoTitle, NoExport; DoseAccum)"></div>
+						</div>
+					</div>
+        </div>
+			</div>
+		</div>
 <!--
 				<div class="col-md-3">
 					<div class="panel panel-default">
@@ -132,8 +179,7 @@
 					</div>
 				</div>
  -->
-			</div>
-
+<!--
 			<div class="row">
 				<div class="col-md-3">
 					<div class="panel panel-default">
@@ -145,43 +191,14 @@
 						</div>
 					</div>
 				</div>
-
-				<div class="col-md-3">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Dosimeter</h3>
-						</div>
-						<div class="panel-body">
-							<div
-								id="MeasurementView(dosimeter; NoHeader, NoSort, NoSelection; DoseRate; DoseAccum)"></div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Dose Rate</h3>
-						</div>
-						<div class="panel-body">
-							<div id="TimeView(200; ptu; NoTitle, NoExport; DoseRate)"></div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Accumulated Dose</h3>
-						</div>
-						<div class="panel-body">
-							<div id="TimeView(200; ptu; NoTitle, NoExport; DoseAccum)"></div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+-->
 
 		<div id="Tab(tab; Cameras)">
 			<div id="CameraTable()"></div>
+		</div>
+
+        <div id="Tab(tab; Gamma Camera)">
+			<div id="GammaCameraView()"></div>
 		</div>
 
 		<div id="Tab(tab; History)">
@@ -199,6 +216,20 @@
 			</div>
 		</div>
 
+       <div id="Tab(tab; General Info)">
+        <div class="row">
+				<div class="col-md-3">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">General Info</h3>
+						</div>
+						<div class="panel-body">
+							<div id="GeneralInfoView(ptu; NoHeader)"></div>
+						</div>
+					</div>
+				</div>
+        </div>
+		</div>
 <!--
 		<div id="Tab(tab; Events)">
 			<div class="row">
@@ -297,8 +328,6 @@
 				</p>
 			</div>
 		</div>
-
-	</div>
-
+    </div>
 </body>
 </html>

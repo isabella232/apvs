@@ -137,9 +137,10 @@ public class DaqServer {
 			// debug the bus...
 			new DebugHandler(bus);
 			
-			new FilterHandler(bus, devices, filterPort);
-
 			new DatabaseWriter(bus);
+			
+			// keep as last (check)
+			new FilterHandler(bus, devices, filterPort);
 
 			Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 

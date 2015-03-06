@@ -198,8 +198,7 @@ public class PtuClientHandler extends PtuReconnectHandler {
 		String sensor = message.getSensor();
 
 		if (!sensorMap.isEnabled(ptu, sensor)) {
-			// log.warn("UPDATE IGNORED, disabled measurement " + ptuId + " " +
-			// sensor);
+			log.warn("UPDATE IGNORED, disabled measurement " + ptu.getName() + " " + sensor);
 			return;
 		}
 

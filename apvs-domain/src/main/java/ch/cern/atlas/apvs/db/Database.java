@@ -43,7 +43,7 @@ import ch.cern.atlas.apvs.domain.User;
 import ch.cern.atlas.apvs.hibernate.types.DoubleStringType;
 import ch.cern.atlas.apvs.hibernate.types.InetAddressType;
 import ch.cern.atlas.apvs.hibernate.types.IntegerStringType;
-import ch.cern.atlas.apvs.hibernate.types.ListDoubleStringType;
+import ch.cern.atlas.apvs.hibernate.types.DoubleArrayStringType;
 import ch.cern.atlas.apvs.hibernate.types.MacAddressType;
 import ch.cern.atlas.apvs.util.CircularList;
 import ch.cern.atlas.apvs.util.StringUtils;
@@ -72,7 +72,7 @@ public class Database {
 
 		// mapped types
 		configuration.registerTypeOverride(new DoubleStringType());
-		configuration.registerTypeOverride(new ListDoubleStringType());
+		configuration.registerTypeOverride(new DoubleArrayStringType());
 		configuration.registerTypeOverride(new IntegerStringType());
 		configuration.registerTypeOverride(new MacAddressType());
 		configuration.registerTypeOverride(new InetAddressType());
@@ -557,7 +557,7 @@ public class Database {
 				high = Scale.getUpThreshold(high, unit);
 				unit = Scale.getUnit(sensor, unit);
 
-				list.add(new Measurement(device, sensor, value, low, high,
+				list.add(new Measurement(device, sensor, value, null, low, high,
 						unit, m.getSamplingRate(), m.getMethod(), m.getTime()));
 			}
 			tx.commit();

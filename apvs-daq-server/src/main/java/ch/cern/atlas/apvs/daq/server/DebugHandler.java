@@ -15,7 +15,7 @@ public class DebugHandler {
 
 			@Override
 			public void onMessageReceived(MessageEvent event) {
-				log.debug("BUS " + event);
+				log.info("BUS " + event);
 			}
 		});
 	}

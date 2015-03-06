@@ -44,7 +44,7 @@ public class DeviceData implements Serializable, IsSerializable {
 	public List<Measurement> getMeasurements() {
 		List<Measurement> list = new ArrayList<Measurement>(map.size());
 		for (Data data: map.values()) {
-			list.add(data.getMeasurement());
+			list.add(data.getCurrentMeasurement());
 		}
 		return list;
 	}

@@ -38,7 +38,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.web.bindery.event.shared.EventBus;
 
-public class GeneralInfoView extends GlassPanel implements Module {
+public class InterventionInfoView extends GlassPanel implements Module {
 
 	private Logger log = LoggerFactory.getLogger(getClass());
 	private ListDataProvider<String> dataProvider = new ListDataProvider<String>();
@@ -71,23 +71,16 @@ public class GeneralInfoView extends GlassPanel implements Module {
 
 	private List<String> names = Arrays
 			.asList(new String[] {
-					ConnectionType.server.getString(),
-					ConnectionType.audio.getString(),
-					ConnectionType.video.getString(),
-					ConnectionType.daq.getString(),
-					ConnectionType.databaseConnect.getString(),
-					ConnectionType.databaseUpdate.getString() });
+					ConnectionType.dosimeter.getString(),
+					"Start Time", "Duration", "Dosimeter" });
 	private List<Class<?>> classes = Arrays
-			.asList(new Class<?>[] { TextCell.class,
-					TextCell.class, TextCell.class,
+			.asList(new Class<?>[] {
 					TextCell.class,
-					TextCell.class,
-					TextCell.class
-					});
+					DateCell.class, DurationCell.class, TextCell.class, TextCell.class });
 
 	private UpdateScheduler scheduler = new UpdateScheduler(this);
 
-	public GeneralInfoView() {
+	public InterventionInfoView() {
 	}
 
 	@Override
