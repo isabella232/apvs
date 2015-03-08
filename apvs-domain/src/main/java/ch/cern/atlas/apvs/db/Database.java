@@ -24,6 +24,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,7 +82,9 @@ public class Database {
 				configuration.getProperties()).build();
 		sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 
-		// new SchemaExport(configuration).create(true, false);
+		SchemaExport export = new SchemaExport(configuration);
+		export.setOutputFile("Schema.sql");
+		export.create(true, false);
 	}
 
 	public static Database getInstance() {
@@ -434,7 +437,7 @@ public class Database {
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<Intervention> getInterventions() {
 		Session session = null;
@@ -442,7 +445,7 @@ public class Database {
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			
+
 			List<Intervention> interventions = session
 					.createCriteria(Intervention.class)
 					.add(Restrictions.or(Restrictions.and(Restrictions.isNull("endTime"), Restrictions.eq("recStatus", 0)),
@@ -458,7 +461,7 @@ public class Database {
 			if (session != null) {
 				session.close();
 			}
-		}		
+		}
 	}
 
 	public Date getLastMeasurementUpdateTime() {
@@ -843,8 +846,8 @@ public class Database {
 		if (bssid == null) {
 			return "";
 		}
-		
-		
+
+
 		Session session = null;
 		Transaction tx = null;
 		try {

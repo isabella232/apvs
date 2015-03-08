@@ -35,7 +35,7 @@
 		</resources>
 		<plugins>
 			<plugin>
-				<!-- Adds a Build.properties file to inject constants into GWT with build 
+				<!-- Adds a Build.properties file to inject constants into GWT with build
 					time and version number -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
@@ -69,6 +69,7 @@
 					<hostedWebapp>${webappDirectory}</hostedWebapp>
 					<encoding>UTF-8</encoding>
 					<bindAddress>0.0.0.0</bindAddress>
+					<extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
 				</configuration>
 				<executions>
 					<execution>
@@ -148,7 +149,7 @@
         </reportSets>
       			</plugin>
     		</plugins>
-  	</reporting>  
+  	</reporting>
 
 	<dependencies>
 		<dependency>
@@ -195,7 +196,7 @@
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
 		</dependency>
-		<!-- <dependency> <groupId>com.google.gwt</groupId> <artifactId>gwt-elemental</artifactId> 
+		<!-- <dependency> <groupId>com.google.gwt</groupId> <artifactId>gwt-elemental</artifactId>
 			</dependency> -->
 		<dependency>
 			<groupId>io.netty</groupId>
@@ -214,7 +215,7 @@
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 		</dependency>
-		<!-- <dependency> <groupId>com.googlecode.mgwt</groupId> <artifactId>mgwt</artifactId> 
+		<!-- <dependency> <groupId>com.googlecode.mgwt</groupId> <artifactId>mgwt</artifactId>
 			</dependency> -->
 		<dependency>
 			<groupId>com.moxie</groupId>
@@ -359,7 +360,3 @@
 
 	</profiles>
 </project>
-
-
-
-
