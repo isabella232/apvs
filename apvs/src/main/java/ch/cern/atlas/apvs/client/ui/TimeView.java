@@ -15,6 +15,7 @@ import ch.cern.atlas.apvs.event.InterventionMapChangedRemoteEvent;
 import ch.cern.atlas.apvs.eventbus.shared.RemoteEventBus;
 import ch.cern.atlas.apvs.eventbus.shared.RequestEvent;
 
+import com.github.highcharts4gwt.model.highcharts.option.api.ChartOptions;
 import com.google.gwt.dom.client.Element;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -41,7 +42,7 @@ public class TimeView extends SpecificTimeView implements Module {
 	@Override
 	public boolean configure(Element element, ClientFactory clientFactory,
 			Arguments args) {
-
+		
 		this.factory = clientFactory;
 
 		RemoteEventBus eventBus = clientFactory.getRemoteEventBus();

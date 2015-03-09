@@ -70,7 +70,10 @@
 					<encoding>UTF-8</encoding>
 					<bindAddress>0.0.0.0</bindAddress>
 					<extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
-				</configuration>
+					<compileSourcesArtifacts>
+                    	<artifact>com.github.highcharts4gwt:highcharts</artifact>
+                	</compileSourcesArtifacts>
+  				</configuration>
 				<executions>
 					<execution>
 						<id>GenerateAsync</id>
@@ -158,10 +161,6 @@
 		</dependency>
 		<dependency>
 			<groupId>ch.cern.atlas</groupId>
-			<artifactId>apvs-charts</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>ch.cern.atlas</groupId>
 			<artifactId>apvs-domain</artifactId>
 		</dependency>
 		<dependency>
@@ -217,10 +216,6 @@
 		</dependency>
 		<!-- <dependency> <groupId>com.googlecode.mgwt</groupId> <artifactId>mgwt</artifactId>
 			</dependency> -->
-		<dependency>
-			<groupId>com.moxie</groupId>
-			<artifactId>highcharts</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.asterisk</groupId>
 			<artifactId>asterisk-java</artifactId>
@@ -278,18 +273,22 @@
 			<artifactId>mockito-all</artifactId>
 		</dependency>
 
-<dependency>
-    <groupId>org.webjars</groupId>
-    <artifactId>highcharts</artifactId>
-</dependency>
-<dependency>
-    <groupId>org.webjars</groupId>
-    <artifactId>highstock</artifactId>
-</dependency>
-<dependency>
-    <groupId>org.webjars</groupId>
-    <artifactId>jquery</artifactId>
-</dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>highcharts</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>highstock</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>jquery</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.highcharts4gwt</groupId>
+			<artifactId>highcharts</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

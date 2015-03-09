@@ -4,36 +4,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.moxieapps.gwt.highcharts.client.Axis;
-import org.moxieapps.gwt.highcharts.client.AxisTitle;
-import org.moxieapps.gwt.highcharts.client.BaseChart;
-import org.moxieapps.gwt.highcharts.client.Chart;
-import org.moxieapps.gwt.highcharts.client.ChartTitle;
-import org.moxieapps.gwt.highcharts.client.Color;
-import org.moxieapps.gwt.highcharts.client.Credits;
-import org.moxieapps.gwt.highcharts.client.Exporting;
-import org.moxieapps.gwt.highcharts.client.Legend;
-import org.moxieapps.gwt.highcharts.client.Point;
-import org.moxieapps.gwt.highcharts.client.Series;
-import org.moxieapps.gwt.highcharts.client.Series.Type;
-import org.moxieapps.gwt.highcharts.client.Style;
-import org.moxieapps.gwt.highcharts.client.ToolTip;
-import org.moxieapps.gwt.highcharts.client.ToolTipData;
-import org.moxieapps.gwt.highcharts.client.ToolTipFormatter;
-import org.moxieapps.gwt.highcharts.client.YAxis;
-import org.moxieapps.gwt.highcharts.client.labels.AxisLabelsData;
-import org.moxieapps.gwt.highcharts.client.labels.AxisLabelsFormatter;
-import org.moxieapps.gwt.highcharts.client.labels.DataLabels;
-import org.moxieapps.gwt.highcharts.client.labels.XAxisLabels;
-import org.moxieapps.gwt.highcharts.client.plotOptions.BarPlotOptions;
-import org.moxieapps.gwt.highcharts.client.plotOptions.LinePlotOptions;
-import org.moxieapps.gwt.highcharts.client.plotOptions.Marker;
-import org.moxieapps.gwt.highcharts.client.plotOptions.SeriesPlotOptions;
-
 import ch.cern.atlas.apvs.client.widget.GlassPanel;
 import ch.cern.atlas.apvs.domain.ClientConstants;
 import ch.cern.atlas.apvs.domain.Device;
 
+import com.github.highcharts4gwt.model.highcharts.option.api.Chart;
+import com.github.highcharts4gwt.model.highcharts.option.api.ChartOptions;
+import com.github.highcharts4gwt.model.highcharts.option.api.Series;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -110,6 +87,8 @@ public class AbstractTimeView extends GlassPanel {
 
 	protected void createChart(String name) {
 		removeChart();
+		
+		ChartOptions c; c.tooltip().formatter();  // NOTE: does not exist yet
 
 		chart = new Chart()
 				// same as above

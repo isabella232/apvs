@@ -37,8 +37,8 @@
 	<inherits name="ch.cern.atlas.apvs.eventbus.EventBus" />
 	<inherits name="ch.cern.atlas.apvs.ptu.Ptu" />
 
-	<inherits name="org.moxieapps.gwt.highcharts.Highcharts" />
-
+	<inherits name='com.github.highcharts4gwt.highcharts' />
+	
 	<!-- inherit css based theme -->
 
 	<stylesheet src='../css/ATWSS.css' />
