@@ -2,8 +2,6 @@ package ch.cern.atlas.apvs.client.ui;
 
 import java.util.Date;
 
-import org.moxieapps.gwt.highcharts.client.Chart;
-
 import ch.cern.atlas.apvs.client.ClientFactory;
 import ch.cern.atlas.apvs.domain.Data;
 import ch.cern.atlas.apvs.domain.Device;
@@ -13,6 +11,7 @@ import ch.cern.atlas.apvs.domain.InterventionMap;
 import ch.cern.atlas.apvs.domain.Measurement;
 import ch.cern.atlas.apvs.ptu.shared.MeasurementChangedEvent;
 
+import com.github.highcharts4gwt.client.view.widget.HighchartsLayoutPanel;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
 public class SpecificTimeView extends AbstractTimeView {
@@ -22,7 +21,7 @@ public class SpecificTimeView extends AbstractTimeView {
 	public SpecificTimeView() {
 	}
 
-	public Chart createSingleChart(ClientFactory factory, String measurementName, Device device,
+	public HighchartsLayoutPanel createSingleChart(ClientFactory factory, String measurementName, Device device,
 			History history, InterventionMap interventions, boolean showLimits) {
 		createChart(Measurement.getDisplayName(measurementName) + " (" + device.getName()
 				+ ")");

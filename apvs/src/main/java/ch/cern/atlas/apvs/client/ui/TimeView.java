@@ -15,7 +15,6 @@ import ch.cern.atlas.apvs.event.InterventionMapChangedRemoteEvent;
 import ch.cern.atlas.apvs.eventbus.shared.RemoteEventBus;
 import ch.cern.atlas.apvs.eventbus.shared.RequestEvent;
 
-import com.github.highcharts4gwt.model.highcharts.option.api.ChartOptions;
 import com.google.gwt.dom.client.Element;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -166,7 +165,7 @@ public class TimeView extends SpecificTimeView implements Module {
 					if (chart != null) {
 						addSeries(device, getName(device, interventions), false);
 						addHistory(history.get(device, measurementName));
-						chart.setAnimation(false);
+						super.options.chart().animationAsBoolean(false);
 					}
 				}
 

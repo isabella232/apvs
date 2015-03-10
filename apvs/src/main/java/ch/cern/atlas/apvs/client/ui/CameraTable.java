@@ -21,7 +21,7 @@ import ch.cern.atlas.apvs.domain.InterventionMap;
 import ch.cern.atlas.apvs.event.InterventionMapChangedRemoteEvent;
 import ch.cern.atlas.apvs.eventbus.shared.RemoteEventBus;
 
-import com.github.highcharts4gwt.model.highcharts.option.api.Chart;
+import com.github.highcharts4gwt.client.view.widget.HighchartsLayoutPanel;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
@@ -126,7 +126,7 @@ public class CameraTable extends Div implements Module {
 			col.add(getCameraView(ptu.getName(), helmet));
 
 			SpecificTimeView timeView = new SpecificTimeView();
-			Chart chart = timeView.createSingleChart(factory, "DoseRate", ptu,
+			HighchartsLayoutPanel chart = timeView.createSingleChart(factory, "DoseRate", ptu,
 					history, interventions, false);
 			col.add(chart);
 			column++;

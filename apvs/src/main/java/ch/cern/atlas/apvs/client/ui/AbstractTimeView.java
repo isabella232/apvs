@@ -8,13 +8,16 @@ import ch.cern.atlas.apvs.client.widget.GlassPanel;
 import ch.cern.atlas.apvs.domain.ClientConstants;
 import ch.cern.atlas.apvs.domain.Device;
 
-import com.github.highcharts4gwt.model.highcharts.option.api.Chart;
+import com.github.highcharts4gwt.client.view.widget.HighchartsLayoutPanel;
+import com.github.highcharts4gwt.model.array.api.Array;
+import com.github.highcharts4gwt.model.factory.api.HighchartsOptionFactory;
+import com.github.highcharts4gwt.model.factory.jso.JsoHighchartsOptionFactory;
 import com.github.highcharts4gwt.model.highcharts.option.api.ChartOptions;
 import com.github.highcharts4gwt.model.highcharts.option.api.Series;
+import com.github.highcharts4gwt.model.highcharts.option.api.series.Data;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -29,13 +32,17 @@ public class AbstractTimeView extends GlassPanel {
 	private Map<Device, String> colorsById;
 	private Map<Device, Series> limitSeriesById;
 
-	protected Chart chart;
+	protected HighchartsOptionFactory factory;
+	protected HighchartsLayoutPanel chart;
+	protected ChartOptions options;
 	protected Integer height = null;
 	protected boolean export = true;
 	protected boolean title = true;
 
 	public AbstractTimeView() {
 		super();
+		factory = new JsoHighchartsOptionFactory();
+		
 		pointsById = new HashMap<Device, Integer>();
 		seriesById = new HashMap<Device, Series>();
 		colorsById = new HashMap<Device, String>();
@@ -50,18 +57,15 @@ public class AbstractTimeView extends GlassPanel {
 				if ((chart != null) && (chart.isVisible())) {
 					// table, with 100% width, will be the same as old chart
 					Widget parent = chart.getParent();
-//					Window.alert("0 "+parent.getOffsetWidth()+" from "+parent.getElement().getId());
 					if (parent != null) {
 						// div, corrected width
 						parent = parent.getParent();
-//						Bootbox.alert("1 "+parent.getOffsetWidth()+" from "+parent.getElement().getId());
 					}
 					if (parent != null) {
 						int width = parent.getOffsetWidth();
 						if (width > 0) {
-//							Bootbox.alert("2 "+parent.getOffsetWidth()+" from "+parent.getElement().getId());
-//							Bootbox.alert("Setting width "+width+" from "+parent.getElement().getId());
-							chart.setSize(width, chart.getOffsetHeight(), false);
+//							chart.setSize(width, chart.getOffsetHeight(), false);
+							chart.setWidth(width+"px");
 						}
 					}
 				}
@@ -88,104 +92,125 @@ public class AbstractTimeView extends GlassPanel {
 	protected void createChart(String name) {
 		removeChart();
 		
-		ChartOptions c; c.tooltip().formatter();  // NOTE: does not exist yet
-
-		chart = new Chart()
+		chart = new HighchartsLayoutPanel();
+		options = factory.createChartOptions();
+		
 				// same as above
 				// FIXME String.format not supported
-				.setColors(
-						// String.format("%s, ", (Object[])color))
-						"#AA4643", "#89A54E", "#80699B", "#3D96AE", "#DB843D",
-						"#92A8CD", "#A47D7C", "#B5CA92", "#4572A7")
-				.setZoomType(BaseChart.ZoomType.X)
-				.setSizeToMatchContainer()
-				.setWidth100()
-				.setHeight100()
-				.setChartTitle(
-						title ? new ChartTitle().setText(name).setStyle(
-								new Style().setFontSize("12px")) : null)
-				.setMarginRight(10)
-				.setExporting(new Exporting().setEnabled(export))
-				.setBarPlotOptions(
-						new BarPlotOptions().setDataLabels(new DataLabels()
-								.setEnabled(true)))
-				.setLinePlotOptions(
-						new LinePlotOptions().setMarker(
-								new Marker().setEnabled(false))
-								.setShadow(false))
-				.setAnimation(false)
-				.setLegend(new Legend().setEnabled(false))
-				.setCredits(new Credits().setEnabled(false))
-				.setToolTip(
-						new ToolTip().setCrosshairs(true, true).setFormatter(
-								new ToolTipFormatter() {
-									@Override
-									public String format(ToolTipData toolTipData) {
-										return "<b>"
-												+ toolTipData.getSeriesName()
-												+ "</b><br/>"
-												+ getDateTime(toolTipData
-														.getXAsLong())
-												+ "<br/>"
-												+ NumberFormat
-														.getFormat("0.00")
-														.format(toolTipData
-																.getYAsDouble());
-									}
-								}));
+		options.colors().push("#AA4643");
+		options.colors().push("#89A54E");
+		options.colors().push("#80699B");
+		options.colors().push("#3D96AE");
+		options.colors().push("#DB843D");
+		options.colors().push("#92A8CD");
+		options.colors().push("#A47D7C");
+		options.colors().push("#B5CA92");
+		options.colors().push("#4572A7");
+
+		if (title) {
+			options.title().text(name).setFieldAsJsonObject("fontSize", "12px");
+		}
+		
+		options.plotOptions().bar().dataLabels().enabled(true);
+		options.plotOptions().line().shadowAsBoolean(false).marker().enabled(false);
+		options.exporting().enabled(export);
+		options.legend().enabled(false);
+		options.credits().enabled(false);
+
+		options.chart().zoomType("x");
+		options.chart().marginRight(10.0);
+		options.chart().animationAsBoolean(false);
+					
+//				.sizeToMatchContainer()
+//				.setWidth100()
+//				.setHeight100()
+			
+//		options.setToolTip(
+//						new ToolTip().setCrosshairs(true, true).setFormatter(
+//								new ToolTipFormatter() {
+//									@Override
+//									public String format(ToolTipData toolTipData) {
+//										return "<b>"
+//												+ toolTipData.getSeriesName()
+//												+ "</b><br/>"
+//												+ getDateTime(toolTipData
+//														.getXAsLong())
+//												+ "<br/>"
+//												+ NumberFormat
+//														.getFormat("0.00")
+//														.format(toolTipData
+//																.getYAsDouble());
+//									}
+//								}));
 
 		if (height != null) {
-			chart.setHeight(height);
+			chart.setHeight(height+"px");
 		}
 
-		chart.getXAxis().setType(Axis.Type.DATE_TIME).setLabels(
-		// Fix one hour offset in time labels...
-				new XAxisLabels().setFormatter(new AxisLabelsFormatter() {
-
-					@Override
-					public String format(AxisLabelsData axisLabelsData) {
-						return getDateTime(axisLabelsData.getValueAsLong());
-					}
-				}));
-		chart.getXAxis().setAxisTitle(new AxisTitle().setText("Time"));
-
-		YAxis yAxis = chart.getYAxis();
-		yAxis.setAllowDecimals(true);
-		yAxis.setAxisTitle(new AxisTitle().setText(""));
+		options.xAxis().type("datetime");
+		
+//		.labels(). (
+//		// Fix one hour offset in time labels...
+//				new XAxisLabels().setFormatter(new AxisLabelsFormatter() {
+//
+//					@Override
+//					public String format(AxisLabelsData axisLabelsData) {
+//						return getDateTime(axisLabelsData.getValueAsLong());
+//					}
+//				}));
+		options.xAxis().title().text("Time");
+		options.yAxis().allowDecimals(true).title().text("");
 	}
 
 	protected void addSeries(Device device, String name, boolean showLimits) {
+	
+		Series series = factory.createSeries();
+		series.name(name);
+		series.type("line");
+		options.plotOptions().series().animation(false);
 
-		Series series = chart.createSeries().setName(name);
-		series.setType(Type.LINE);
-		series.setPlotOptions(new SeriesPlotOptions().setAnimation(false));
 		pointsById.put(device, 0);
 		seriesById.put(device, series);
-		colorsById.put(device, color[chart.getSeries().length]);
+		colorsById.put(device, color[options.series().length()]);
 
 		if (showLimits) {
-			Series limitSeries = chart.createSeries();
-			limitSeries.setType(Type.AREA_RANGE);
-			limitSeries.setPlotOptions(new SeriesPlotOptions()
-					.setAnimation(false)
-					.setColor(new Color(161, 231, 231, 0.2)) // #3482d4
-					.setEnableMouseTracking(false));
+			Series limitSeries = factory.createSeries();
+			limitSeries.type("arearange");
+			options.plotOptions().series()
+					.animation(false)
+					.color("#3482d4")
+					.enableMouseTracking(false);
 			limitSeriesById.put(device, limitSeries);
 
-			chart.addSeries(limitSeries, false, false);
+			options.series().addToEnd(limitSeries);
 		}
-		chart.addSeries(series, true, false);
+		options.series().addToEnd(series);
+		chart.renderChart(options);
 	}
 
 	protected void setData(Device device, Number[][] data, Number[][] limits) {
 		Series series = seriesById.get(device);
-		series.setPoints(data != null ? data : new Number[0][2], false);
+	
+		// FIXME, below may be very slow
+//		series.setPoints(data != null ? data : new Number[0][2], false);		
+		if (data != null) {
+			Array<Data> d = series.dataAsArrayObject();
+			for (int i=0; i<data.length; i++) {
+				d.addToEnd(factory.createData().x(data[i][0].doubleValue()).y(data[i][1].doubleValue()));
+			}
+		}
+		
 		pointsById.put(device, data != null ? data.length : 0);
 
 		Series limitSeries = limitSeriesById.get(device);
 		if (limitSeries != null) {
-			limitSeries.setPoints(limits != null ? limits : new Number[0][3],
-					false);
+//			limitSeries.setPoints(limits != null ? limits : new Number[0][3],
+//					false);
+			Array<Data> d = series.dataAsArrayObject();
+			for (int i=0; i<data.length; i++) {
+				// FIXME handle upThreshold
+				d.addToEnd(factory.createData().x(data[i][0].doubleValue()).y(data[i][1].doubleValue()));				
+			}
 		}
 	}
 	
@@ -203,17 +228,21 @@ public class AbstractTimeView extends GlassPanel {
 		if (!shift) {
 			pointsById.put(device, numberOfPoints + 1);
 		}
-		chart.setLinePlotOptions(new LinePlotOptions().setMarker(new Marker()
-				.setEnabled(!shift)));
+		options.plotOptions().line().marker().enabled(!shift);
 
 		Series limitSeries = limitSeriesById.get(device);
 		if (limitSeries != null) {
-			limitSeries.addPoint(new Point(time, downThreshold, upThreshold), false,
-					shift, false);
+//			limitSeries.addPoint(new Point(time, downThreshold, upThreshold), false,
+//					shift, false);
+			// FIXME missing upThreshold
+			limitSeries.dataAsArrayObject().addToEnd(factory.createData().x(time).y(downThreshold.doubleValue()));
 		}
 
-		Point p = new Point(time, value);
-		series.addPoint(p, true, shift, false);
+//		Point p = new Point(time, value);
+//		series.addPoint(p, true, shift, false);
+		// FIXME, what is shift, true and false for
+		series.dataAsArrayObject().addToEnd(factory.createData().x(time).y(value.doubleValue()));
+		chart.renderChart(options);
 	}
 
 	private static final DateTimeFormat ddMMM = DateTimeFormat
@@ -269,12 +298,12 @@ public class AbstractTimeView extends GlassPanel {
 		unit = unit.replaceAll("\\&deg\\;", "\u00B0");
 		unit = unit.replaceAll("\\&micro\\;", "\u00B5");
 
-		chart.getYAxis().setAxisTitle(new AxisTitle().setText(unit));
+		options.yAxis().title().text(unit);
 	}
 
 	public void redraw() {
 		if (chart != null) {
-			chart.redraw();
+			chart.renderChart(options);
 		}
 	}
 
