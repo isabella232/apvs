@@ -1,5 +1,6 @@
 ---
 layout: default
+theme: cosmo
 title: APVS
 ---
 ###**APVS** is the ATLAS Procedures Visualizer System for the Wireless Safety System.
@@ -56,6 +57,79 @@ In order to create the plots we are using GWT Highcharts which is a comprehensiv
 
 
 ![alt edjiwefiuw](json_byte2packets.svg)
+
+
+**apvs-configuration**
+
+APVS configuration is an apache configuration.
+
+If needed to update commons-configuration which is needed in order to read the option file vs configuration you need to do the following:
+
+compile commons-configuration in ~/cern/svn/
+copy commons-configuration-2.0-SNAPSHOT.jar to current dir with svn version number
+copy commons-configuration-2.0-SNAPSHOT-sources.jar to current dir with svn version number
+copy pom.xml to current dir as commons-configuration-2.0-SNAPSHOT-pom.xml with svn version number
+
+
+
+**apvs-converter**
+
+**apvs-daq-server** 
+
+The code for Data Acquisition.
+There are several classes under apvs-daq-server --> src/main/java --> ch.cern.atlas.apvs.daq.server :
+
+**a) DaqServer**
+
+In order to make a measurement available at an outport we have to create a filter to the bus (see filterport description)
+
+Json Message Encoder 
+Replaying decoder makes sure that the json message is fully received.
+ 
+**b) DatabaseWriter**
+connecting to the bus, taking every message and storing in the DB.
+
+There are four types in json:
+
+**1)** general configuration (in json is key values pairs) and tells you which access point it is connected, which dosimeter it is actually connected to.
+
+**2)** measurement conf. shows the limits for the measurement (thresholds)
+
+**3)** events  --->alarms, shut down , boot, switch on/off, events happen occasionally.
+
+**4)** measurements in regular basis.
+
+
+**c) DebugHandler:** what goes on and off the bus, it is saved in a log file, for every message.
+
+**d) EventFilter:** filtering events.
+
+**e) Filter:** the interface for filtering the measurements.
+
+**f) TypeEventFilter**
+
+It is not currently being used.
+
+**g) ValueFilter**
+check through "messagetothebus" declaration if needed to be used.
+
+
+To define an inport for receiving data and an outport to send data, edit the APVS.properties file of the apvs-daq-server. 
+
+*Example:*
+ 
+*APVS.daq.inport=10123*
+
+*APVS.daq.outport=10124*
+
+*APVS.daq.filterport=10125*
+
+> Additionally, a filter port was created in order to send specific needed data to a port (filterport).
+
+see photo 2 
+
+
+
 
 
 
