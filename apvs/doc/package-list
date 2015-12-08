@@ -1,0 +1,17 @@
+ch.cern.atlas.apvs.converter
+ch.cern.atlas.apvs.daq.server
+ch.cern.atlas.apvs.db
+ch.cern.atlas.apvs.domain
+ch.cern.atlas.apvs.event
+ch.cern.atlas.apvs.eventbus.client
+ch.cern.atlas.apvs.eventbus.poll
+ch.cern.atlas.apvs.eventbus.server
+ch.cern.atlas.apvs.eventbus.shared
+ch.cern.atlas.apvs.hibernate.types
+ch.cern.atlas.apvs.ptu
+ch.cern.atlas.apvs.ptu.server
+ch.cern.atlas.apvs.ptu.shared
+ch.cern.atlas.apvs.server
+ch.cern.atlas.apvs.util
+com.cedarsoftware.util
+com.cedarsoftware.util.io
